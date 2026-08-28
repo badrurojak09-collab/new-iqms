@@ -18,10 +18,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             SuperAdminSeeder::class,
+            LamInfokom21CriteriaSeeder::class,
+            BanPtIaptCriteriaSeeder::class,
         ]);
 
         if (app()->environment(['local', 'testing'])) {
-            $this->call(SqmScenarioSeeder::class);
+            $this->call([
+                SqmScenarioSeeder::class,
+                StmikNusantaraDemoSeeder::class,
+            ]);
         }
 
         User::factory()->create([

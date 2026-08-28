@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models\Concerns;
 
@@ -15,7 +13,7 @@ trait HasTenantScope
         return method_exists($this, 'hasRole') && $this->hasRole('super_admin');
     }
 
-    public function canAccessPerguruanTinggi(PerguruanTinggi|int $perguruanTinggi): bool
+    public function canAccessPerguruanTinggi(PerguruanTinggi|int|null $perguruanTinggi): bool
     {
         if ($this->isSuperAdmin()) {
             return true;
@@ -25,8 +23,8 @@ trait HasTenantScope
             ? $perguruanTinggi->getKey()
             : $perguruanTinggi;
 
-        return $this->perguruan_tinggi_id === $id
-            || ($this->yayasan_id !== null && PerguruanTinggi::query()
+        return $this->perguruan_tinggi_id === $id ||
+            ($this->yayasan_id !== null && PerguruanTinggi::query()
                 ->whereKey($id)
                 ->where('yayasan_id', $this->yayasan_id)
                 ->exists());
@@ -48,8 +46,9 @@ trait HasTenantScope
 
         return ProgramStudi::query()
             ->whereKey($id)
-            ->whereHas('perguruanTinggi', fn (Builder $query) => $query->where('yayasan_id', $this->yayasan_id)
-                ->when($this->perguruan_tinggi_id, fn (Builder $q) => $q->whereKey($this->perguruan_tinggi_id)))
+            ->whereHas('perguruanTinggi', fn(Builder $query) => $query
+                ->where('yayasan_id', $this->yayasan_id)
+                ->when($this->perguruan_tinggi_id, fn(Builder $q) => $q->whereKey($this->perguruan_tinggi_id)))
             ->exists();
     }
 }
