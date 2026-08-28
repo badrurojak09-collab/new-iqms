@@ -8,11 +8,11 @@ use App\Filament\Resources\UserTenantScopes\Pages\ListUserTenantScopes;
 use App\Filament\Resources\UserTenantScopes\Schemas\UserTenantScopeForm;
 use App\Filament\Resources\UserTenantScopes\Tables\UserTenantScopesTable;
 use App\Models\UserTenantScope;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use BackedEnum;
 
 class UserTenantScopeResource extends Resource
 {
@@ -20,15 +20,15 @@ class UserTenantScopeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = null;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Organisasi & Tenant';
+    protected static string|\UnitEnum|null $navigationGroup = 'Security';
 
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 20;
 
-    protected static ?string $navigationLabel = 'Ruang Lingkup Pengguna';
+    protected static ?string $navigationLabel = 'Lingkup Akses Pengguna';
 
-    protected static ?string $modelLabel = 'Ruang Lingkup Pengguna';
+    protected static ?string $modelLabel = 'Lingkup Akses Pengguna';
 
-    protected static ?string $pluralModelLabel = 'Ruang Lingkup Pengguna';
+    protected static ?string $pluralModelLabel = 'Lingkup Akses Pengguna';
 
     public static function form(Schema $schema): Schema
     {

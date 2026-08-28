@@ -15,11 +15,37 @@ final class UserPolicy
 
     public function view(User $user, User $target): bool
     {
-        return $user->isSuperAdmin() && ! $target->isSuperAdmin();
+        return $user->isSuperAdmin()
+            && ($user->getKey() === $target->getKey() || ! $target->isSuperAdmin());
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    public function update(User $user, User $target): bool
+    {
+        return $user->isSuperAdmin()
+            && ($user->getKey() === $target->getKey() || ! $target->isSuperAdmin());
+    }
+
+    public function delete(User $user, User $target): bool
+    {
+        return $user->isSuperAdmin()
+            && $user->getKey() !== $target->getKey()
+            && ! $target->isSuperAdmin();
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->isSuperAdmin();
     }
 
     public function impersonate(User $user, User $target): bool
     {
-        return $user->isSuperAdmin() && ! $target->isSuperAdmin() && $user->getKey() !== $target->getKey();
+        return $user->isSuperAdmin()
+            && ! $target->isSuperAdmin()
+            && $user->getKey() !== $target->getKey();
     }
 }

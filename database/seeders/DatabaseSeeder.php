@@ -20,18 +20,20 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             LamInfokom21CriteriaSeeder::class,
             BanPtIaptCriteriaSeeder::class,
+            SpmiStmikRealisticDemoSeeder::class,
+            AccreditationStmikRealisticDemoSeeder::class,
         ]);
 
         if (app()->environment(['local', 'testing'])) {
             $this->call([
-                SqmScenarioSeeder::class,
+                // SqmScenarioSeeder::class,
                 StmikNusantaraDemoSeeder::class,
             ]);
         }
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            // 'name' => 'Test User',
+            // 'email' => 'test@example.com',
         ]);
     }
 }

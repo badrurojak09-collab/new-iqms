@@ -3,12 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Accreditation;
-use App\Models\DocumentGenerationRequest;
 use App\Models\AccreditationScoreSnapshot;
 use App\Models\AccreditationSubmission;
+use App\Models\AmiChecklistItem;
 use App\Models\AmiCycle;
 use App\Models\AmiFinding;
-use App\Models\AmiChecklistItem;
+use App\Models\DocumentGenerationRequest;
 use App\Models\RtmDecision;
 use App\Models\RtmMeeting;
 use App\Models\UserTenantScope;
@@ -18,14 +18,15 @@ use App\Observers\RtmDecisionObserver;
 use App\Observers\RtmMeetingObserver;
 use App\Observers\UserTenantScopeObserver;
 use App\Policies\AccreditationPolicy;
-use App\Policies\DocumentGenerationRequestPolicy;
 use App\Policies\AccreditationScoreSnapshotPolicy;
 use App\Policies\AccreditationSubmissionPolicy;
+use App\Policies\AmiChecklistItemPolicy;
 use App\Policies\AmiCyclePolicy;
 use App\Policies\AmiFindingPolicy;
-use App\Policies\AmiChecklistItemPolicy;
+use App\Policies\DocumentGenerationRequestPolicy;
 use App\Policies\RtmDecisionPolicy;
 use App\Policies\RtmMeetingPolicy;
+use App\Policies\UserTenantScopePolicy;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->scoped(TenantContext::class, static fn (): TenantContext => new TenantContext);
+        $this->app->scoped(TenantContext::class, static fn(): TenantContext => new TenantContext);
     }
 
     /**
@@ -60,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AmiChecklistItem::class, AmiChecklistItemPolicy::class);
         Gate::policy(RtmMeeting::class, RtmMeetingPolicy::class);
         Gate::policy(RtmDecision::class, RtmDecisionPolicy::class);
+        Gate::policy(UserTenantScope::class, UserTenantScopePolicy::class);
         Gate::policy(\App\Models\User::class, \App\Policies\UserPolicy::class);
 
         foreach ([

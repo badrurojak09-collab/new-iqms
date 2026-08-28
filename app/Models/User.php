@@ -17,7 +17,7 @@ use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'yayasan_id', 'perguruan_tinggi_id', 'default_scope_type', 'default_scope_id'])]
+#[Fillable(['name', 'email', 'password', 'email_verified_at', 'yayasan_id', 'perguruan_tinggi_id', 'default_scope_type', 'default_scope_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
