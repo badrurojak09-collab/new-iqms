@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PerguruanTinggi extends Model
@@ -34,11 +32,11 @@ class PerguruanTinggi extends Model
         $nextNumber = (int) (static::withTrashed()
             ->where('kode_pt', 'like', 'PT-%')
             ->get()
-            ->map(fn (self $pt): int => (int) str($pt->kode_pt)->after('PT-')->toString())
+            ->map(fn(self $pt): int => (int) str($pt->kode_pt)->after('PT-')->toString())
             ->max() ?? 0) + 1;
 
         do {
-            $code = 'PT-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+            $code = 'PT-' . str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
             $nextNumber++;
         } while (static::withTrashed()->where('kode_pt', $code)->exists());
 

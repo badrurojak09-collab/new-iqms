@@ -8,14 +8,14 @@ use App\Filament\Resources\SpmiImprovementPrograms\Pages\ListSpmiImprovementProg
 use App\Filament\Resources\SpmiImprovementPrograms\Schemas\SpmiImprovementProgramForm;
 use App\Filament\Resources\SpmiImprovementPrograms\Tables\SpmiImprovementProgramsTable;
 use App\Models\SpmiImprovementProgram;
-use BackedEnum;
-use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use BackedEnum;
+use UnitEnum;
 
 class SpmiImprovementProgramResource extends Resource
 {
@@ -25,11 +25,11 @@ class SpmiImprovementProgramResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'SPMI';
 
-    protected static ?string $navigationLabel = 'Program Peningkatan SPMI';
+    protected static ?string $navigationLabel = 'PPM';
 
-    protected static ?string $modelLabel = 'Program Peningkatan SPMI';
+    protected static ?string $modelLabel = 'PPM';
 
-    protected static ?string $pluralModelLabel = 'Program Peningkatan SPMI';
+    protected static ?string $pluralModelLabel = 'PPM';
 
     protected static ?int $navigationSort = 70;
 

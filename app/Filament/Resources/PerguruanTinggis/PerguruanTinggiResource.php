@@ -9,13 +9,14 @@ use App\Filament\Resources\PerguruanTinggis\Schemas\PerguruanTinggiForm;
 use App\Filament\Resources\PerguruanTinggis\Tables\PerguruanTinggisTable;
 use App\Filament\Support\TenantAwareGlobalSearch;
 use App\Models\PerguruanTinggi;
-use BackedEnum;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use BackedEnum;
 
 class PerguruanTinggiResource extends Resource
 {
@@ -34,6 +35,15 @@ class PerguruanTinggiResource extends Resource
     protected static ?string $modelLabel = 'Perguruan Tinggi';
 
     protected static ?string $pluralModelLabel = 'Perguruan Tinggi';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forPerguruanTinggi(
+            parent::getEloquentQuery(),
+            auth()->user(),
+            'id'  // Pakai 'id' karena ini Resource PerguruanTinggi itu sendiri
+        );
+    }
 
     public static function form(Schema $schema): Schema
     {

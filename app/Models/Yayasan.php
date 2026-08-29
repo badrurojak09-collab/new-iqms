@@ -1,12 +1,10 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Yayasan extends Model
@@ -33,11 +31,11 @@ class Yayasan extends Model
         $nextNumber = (int) (static::withTrashed()
             ->where('kode', 'like', 'YYS-%')
             ->get()
-            ->map(fn (self $yayasan): int => (int) str($yayasan->kode)->after('YYS-')->toString())
+            ->map(fn(self $yayasan): int => (int) str($yayasan->kode)->after('YYS-')->toString())
             ->max() ?? 0) + 1;
 
         do {
-            $code = 'YYS-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+            $code = 'YYS-' . str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
             $nextNumber++;
         } while (static::withTrashed()->where('kode', $code)->exists());
 

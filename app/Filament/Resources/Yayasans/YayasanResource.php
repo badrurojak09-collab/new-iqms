@@ -9,13 +9,14 @@ use App\Filament\Resources\Yayasans\Schemas\YayasanForm;
 use App\Filament\Resources\Yayasans\Tables\YayasansTable;
 use App\Filament\Support\TenantAwareGlobalSearch;
 use App\Models\Yayasan;
-use BackedEnum;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use BackedEnum;
 
 class YayasanResource extends Resource
 {
@@ -34,6 +35,14 @@ class YayasanResource extends Resource
     protected static ?string $modelLabel = 'Yayasan';
 
     protected static ?string $pluralModelLabel = 'Yayasan';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forYayasan(
+            parent::getEloquentQuery(),
+            auth()->user()
+        );
+    }
 
     public static function form(Schema $schema): Schema
     {

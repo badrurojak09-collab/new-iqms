@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -44,7 +42,8 @@ class User extends Authenticatable
 
     public function programStudis(): BelongsToMany
     {
-        return $this->belongsToMany(ProgramStudi::class, 'user_program_studi')
+        return $this
+            ->belongsToMany(ProgramStudi::class, 'user_program_studi')
             ->withPivot(['peran', 'starts_at', 'ends_at'])
             ->withTimestamps();
     }

@@ -1,19 +1,18 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class EvidenceCollection extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ScopedByTenant;
 
     protected $fillable = ['perguruan_tinggi_id', 'program_studi_id', 'accreditation_id', 'created_by', 'code', 'name', 'provider', 'root_folder_url', 'root_folder_id', 'status', 'description', 'last_checked_at'];
 
@@ -22,6 +21,14 @@ class EvidenceCollection extends Model
         static::creating(function (self $collection): void {
             $collection->created_by ??= Auth::id();
         });
+    }
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
+        ];
     }
 
     protected function casts(): array

@@ -1,24 +1,32 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Evidence extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ScopedByTenant;
 
     protected $table = 'evidences';
 
     protected $fillable = [
-        'perguruan_tinggi_id', 'program_studi_id', 'created_by', 'code', 'title',
-        'description', 'valid_from', 'valid_until', 'status', 'verified_by', 'verified_at',
+        'perguruan_tinggi_id',
+        'program_studi_id',
+        'created_by',
+        'code',
+        'title',
+        'description',
+        'valid_from',
+        'valid_until',
+        'status',
+        'verified_by',
+        'verified_at',
     ];
 
     protected function casts(): array
@@ -27,6 +35,14 @@ class Evidence extends Model
             'valid_from' => 'date',
             'valid_until' => 'date',
             'verified_at' => 'datetime',
+        ];
+    }
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
         ];
     }
 

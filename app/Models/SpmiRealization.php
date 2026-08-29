@@ -1,21 +1,28 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class SpmiRealization extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByTenant;
 
     protected $table = 'spmi_realizations';
 
     protected $fillable = ['spmi_target_id', 'spmi_indicator_id', 'perguruan_tinggi_id', 'program_studi_id', 'period_year', 'realization_numeric', 'realization_text', 'source_type', 'source_reference', 'status', 'recorded_by', 'verified_by', 'verified_at', 'verification_notes'];
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
+        ];
+    }
 
     protected function casts(): array
     {

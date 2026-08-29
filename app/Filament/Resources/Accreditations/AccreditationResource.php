@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\Accreditations;
 
@@ -15,7 +13,6 @@ use App\Filament\Resources\Accreditations\RelationManagers\AccreditationSubmissi
 use App\Models\Accreditation;
 use App\Models\ReadinessRun;
 use App\Support\Tenancy\TenantContext;
-use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -28,6 +25,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use BackedEnum;
 
 class AccreditationResource extends Resource
 {
@@ -54,10 +52,61 @@ class AccreditationResource extends Resource
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                    TextInput::make('code')->label('Kode Akreditasi')->required()->maxLength(100)->alphaDash()->unique(ignoreRecord: true),
-                    Select::make('scope_type')->label('Lingkup Akreditasi')->options(['institution' => 'Institusi', 'program_studi' => 'Program Studi'])->required()->live(),
-                    Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt')->required()->default(fn (): ?int => app(TenantContext::class)->perguruanTinggiId()),
-                    Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi')->searchable()->preload()->nullable(),
+                    TextInput::make('code')
+                        ->label('Kode Akreditasi')
+                        ->required()
+                        ->maxLength(100)
+                        ->alphaDash()
+                        ->unique(ignoreRecord: true),
+                    Select::make('scope_type')
+                        ->label('Lingkup Akreditasi')
+                        ->options([
+                            'institution' => 'Institusi',
+                            'program_studi' => 'Program Studi'
+                        ])
+                        ->required()
+                        ->live(),
+                    Select::make('perguruan_tinggi_id')
+                        ->label('Perguruan Tinggi')
+                        ->relationship(
+                            name: 'perguruanTinggi',
+                            titleAttribute: 'nama_pt',
+                            modifyQueryUsing: function (Builder $query) {
+                                $user = auth()->user();
+                                if (!$user || $user->isSuperAdmin()) {
+                                    return $query;
+                                }
+                                // Filter dropdown PT hanya yang diizinkan untuk user ini
+                                return $query->whereIn('id', $user->accessiblePerguruanTinggiIds());
+                            }
+                        )
+                        ->required()
+                        ->default(fn(): ?int => app(TenantContext::class)->perguruanTinggiId())
+                        ->live(),
+                    Select::make('program_studi_id')
+                        ->label('Program Studi')
+                        ->relationship(
+                            name: 'programStudi',
+                            titleAttribute: 'nama_prodi',
+                            modifyQueryUsing: function (Builder $query, callable $get) {
+                                $user = auth()->user();
+
+                                // Jika Perguruan Tinggi sudah dipilih di form, utamakan filter berdasarkan PT tsb
+                                if ($ptId = $get('perguruan_tinggi_id')) {
+                                    $query->where('perguruan_tinggi_id', $ptId);
+                                }
+
+                                if (!$user || $user->isSuperAdmin()) {
+                                    return $query;
+                                }
+
+                                // Batasi pilihan prodi sesuai yang diizinkan di Trait HasTenantScope
+                                return $query->whereIn('id', $user->accessibleProgramStudiIds());
+                            }
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                     Select::make('instrument_version_id')->label('Versi Instrumen')->relationship('instrumentVersion', 'version_label')->searchable()->preload()->required(),
                     TextInput::make('title')->label('Judul Kegiatan')->required()->maxLength(255),
                     Select::make('status')->label('Status Akreditasi')->options(['draft' => 'Draf', 'in_progress' => 'Sedang Berjalan', 'review' => 'Dalam Review', 'ready' => 'Siap Diajukan', 'submitted' => 'Sudah Diajukan', 'completed' => 'Selesai'])->required()->default('draft'),
@@ -73,21 +122,46 @@ class AccreditationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('code')->label('Kode Akreditasi')->searchable()->sortable()->copyable(),
-            TextColumn::make('title')->label('Judul Kegiatan')->searchable()->wrap(),
-            TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->sortable()->searchable(),
-            TextColumn::make('programStudi.nama_prodi')->label('Program Studi')->sortable()->searchable()->placeholder('Institusi'),
-            TextColumn::make('instrumentVersion.version_label')->label('Versi Instrumen')->sortable(),
-            TextColumn::make('scope_type')->label('Lingkup')->formatStateUsing(fn (?string $state): string => $state === 'program_studi' ? 'Program Studi' : 'Institusi')->badge(),
-            TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
-            TextColumn::make('planned_submission_date')->label('Rencana Pengajuan')->date()->sortable(),
+            TextColumn::make('code')
+                ->label('Kode Akreditasi')
+                ->searchable()
+                ->sortable()
+                ->copyable(),
+            TextColumn::make('title')
+                ->label('Judul Kegiatan')
+                ->searchable()
+                ->wrap(),
+            TextColumn::make('perguruanTinggi.nama_pt')
+                ->label('Perguruan Tinggi')
+                ->sortable()
+                ->searchable(),
+            TextColumn::make('programStudi.nama_prodi')
+                ->label('Program Studi')
+                ->sortable()
+                ->searchable()
+                ->placeholder('Institusi'),
+            TextColumn::make('instrumentVersion.version_label')
+                ->label('Versi Instrumen')
+                ->sortable(),
+            TextColumn::make('scope_type')
+                ->label('Lingkup')
+                ->formatStateUsing(fn(?string $state): string => $state === 'program_studi' ? 'Program Studi' : 'Institusi')
+                ->badge(),
+            TextColumn::make('status')
+                ->label('Status')
+                ->badge()
+                ->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
+            TextColumn::make('planned_submission_date')
+                ->label('Rencana Pengajuan')
+                ->date()
+                ->sortable(),
         ])->recordActions([
             Action::make('calculateReadiness')
                 ->label('Hitung Kesiapan')
                 ->icon(Heroicon::OutlinedCalculator)
                 ->requiresConfirmation()
-                ->visible(fn (): bool => auth()->user()?->isSuperAdmin() || auth()->user()?->can('manage accreditation') || auth()->user()?->can('review accreditation'))
-                ->action(fn (Accreditation $record): ReadinessRun => app(ReadinessScoringService::class)->calculate(auth()->user(), $record)),
+                ->visible(fn(): bool => auth()->user()?->isSuperAdmin() || auth()->user()?->can('manage accreditation') || auth()->user()?->can('review accreditation'))
+                ->action(fn(Accreditation $record): ReadinessRun => app(ReadinessScoringService::class)->calculate(auth()->user(), $record)),
         ])->filters([
             SelectFilter::make('status')->label('Status')->options(['draft' => 'Draf', 'in_progress' => 'Sedang Berjalan', 'review' => 'Dalam Review', 'ready' => 'Siap Diajukan', 'submitted' => 'Sudah Diajukan', 'completed' => 'Selesai']),
             SelectFilter::make('scope_type')->options(['institution' => 'Institusi', 'program_studi' => 'Program Studi']),
@@ -96,16 +170,23 @@ class AccreditationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with(['perguruanTinggi', 'programStudi', 'instrumentVersion']);
-        $tenant = app(TenantContext::class);
-        if ($tenant->perguruanTinggiId() !== null) {
-            $query->where('perguruan_tinggi_id', $tenant->perguruanTinggiId());
-        }
-        if ($tenant->programStudiId() !== null) {
-            $query->where('program_studi_id', $tenant->programStudiId());
+        $query = parent::getEloquentQuery()->with([
+            'perguruanTinggi',
+            'programStudi',
+            'instrumentVersion'
+        ]);
+
+        $user = auth()->user();
+
+        // Jika Super Admin, jangan filter apapun
+        if (!$user || $user->isSuperAdmin()) {
+            return $query;
         }
 
-        return $query;
+        // Ambil SEMUA ID PT yang berhak diakses (berasal dari Trait HasTenantScope)
+        $allowedPtIds = $user->accessiblePerguruanTinggiIds();
+
+        return $query->whereIn('perguruan_tinggi_id', $allowedPtIds);
     }
 
     public static function getRelations(): array

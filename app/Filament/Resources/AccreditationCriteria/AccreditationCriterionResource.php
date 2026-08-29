@@ -1,11 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\AccreditationCriteria;
 
 use App\Models\AccreditationCriterion;
-use BackedEnum;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -17,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use BackedEnum;
 
 class AccreditationCriterionResource extends Resource
 {
@@ -29,6 +27,10 @@ class AccreditationCriterionResource extends Resource
     protected static ?int $navigationSort = 20;
 
     protected static ?string $navigationLabel = 'Kriteria Akreditasi';
+
+    protected static ?string $modelLabel = 'Kriteria Akreditasi';
+
+    protected static ?string $pluralModelLabel = 'Kriteria Akreditasi';
 
     public static function form(Schema $schema): Schema
     {
@@ -87,13 +89,17 @@ class AccreditationCriterionResource extends Resource
             TextColumn::make('code')->label('Kode Kriteria')->searchable()->sortable(),
             TextColumn::make('name')->label('Nama Kriteria')->searchable()->sortable(),
             TextColumn::make('sort_order')->label('Urutan')->sortable(),
-            TextColumn::make('is_required')->label('Wajib')->badge()->formatStateUsing(fn (mixed $state): string => (bool) $state ? 'Ya' : 'Tidak')->color(fn (mixed $state): string => (bool) $state ? 'success' : 'gray'),
+            TextColumn::make('is_required')->label('Wajib')->badge()->formatStateUsing(fn(mixed $state): string => (bool) $state ? 'Ya' : 'Tidak')->color(fn(mixed $state): string => (bool) $state ? 'success' : 'gray'),
             TextColumn::make('mappings_count')->counts('mappings')->label('Pemetaan')->sortable(),
         ])->defaultSort('sort_order');
     }
 
     public static function getPages(): array
     {
-        return ['index' => Pages\ListAccreditationCriteria::route('/'), 'create' => Pages\CreateAccreditationCriterion::route('/create'), 'edit' => Pages\EditAccreditationCriterion::route('/{record}/edit')];
+        return [
+            'index' => Pages\ListAccreditationCriteria::route('/'),
+            'create' => Pages\CreateAccreditationCriterion::route('/create'),
+            'edit' => Pages\EditAccreditationCriterion::route('/{record}/edit')
+        ];
     }
 }

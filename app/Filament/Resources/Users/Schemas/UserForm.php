@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Schemas;
 
@@ -40,15 +38,15 @@ final class UserForm
                         ->revealable()
                         ->minLength(8)
                         ->confirmed()
-                        ->dehydrated(fn (?string $state): bool => filled($state))
-                        ->required(fn (string $operation): bool => $operation === 'create')
+                        ->dehydrated(fn(?string $state): bool => filled($state))
+                        ->required(fn(string $operation): bool => $operation === 'create')
                         ->helperText('Minimal 8 karakter. Kosongkan saat edit jika password tidak ingin diubah.'),
                     TextInput::make('password_confirmation')
                         ->label('Konfirmasi Password')
                         ->password()
                         ->revealable()
                         ->dehydrated(false)
-                        ->required(fn (string $operation): bool => $operation === 'create'),
+                        ->required(fn(string $operation): bool => $operation === 'create'),
                     Select::make('roles')
                         ->label('Peran Aplikasi')
                         ->relationship('roles', 'name')
@@ -56,17 +54,17 @@ final class UserForm
                         ->searchable()
                         ->preload()
                         ->required()
-                        ->disabled(fn (?User $record): bool => $record?->isSuperAdmin() ?? false)
+                        ->disabled(fn(?User $record): bool => $record?->isSuperAdmin() ?? false)
                         ->helperText('Peran super_admin pada akun super administrator tidak dapat dilepas dari form ini.'),
                     Select::make('yayasan_id')
                         ->label('Yayasan Default')
-                        ->options(fn (): array => Yayasan::query()->orderBy('nama')->pluck('nama', 'id')->all())
+                        ->options(fn(): array => Yayasan::query()->orderBy('nama')->pluck('nama', 'id')->all())
                         ->searchable()
                         ->preload()
                         ->nullable(),
                     Select::make('perguruan_tinggi_id')
                         ->label('Perguruan Tinggi Default')
-                        ->options(fn (): array => PerguruanTinggi::query()->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())
+                        ->options(fn(): array => PerguruanTinggi::query()->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())
                         ->searchable()
                         ->preload()
                         ->nullable(),
@@ -87,7 +85,8 @@ final class UserForm
                         ->label('Email Terverifikasi Pada')
                         ->seconds(false)
                         ->nullable(),
-                ]),
+                ])
+                ->columns(2),
         ]);
     }
 }

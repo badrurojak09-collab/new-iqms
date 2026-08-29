@@ -1,17 +1,16 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 
 class SpmiEvaluation extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByTenant;
 
     protected $table = 'spmi_evaluations';
 
@@ -20,6 +19,14 @@ class SpmiEvaluation extends Model
     protected function casts(): array
     {
         return ['achievement_percentage' => 'decimal:4', 'evaluated_at' => 'datetime'];
+    }
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
+        ];
     }
 
     public function realization(): BelongsTo

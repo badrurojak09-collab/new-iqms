@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\PerguruanTinggis\Schemas;
 
+use App\Support\Tenancy\TenantQuery;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class PerguruanTinggiForm
 {
@@ -20,7 +22,14 @@ class PerguruanTinggiForm
                 ->schema([
                     Select::make('yayasan_id')
                         ->label('Yayasan')
-                        ->relationship('yayasan', 'nama')
+                        ->relationship(
+                            name: 'yayasan',
+                            titleAttribute: 'nama',
+                            modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forYayasan(
+                                $query,
+                                auth()->user()
+                            )
+                        )
                         ->searchable()
                         ->preload()
                         ->required(),

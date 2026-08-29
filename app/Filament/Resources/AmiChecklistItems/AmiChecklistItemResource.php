@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiChecklistItems;
 
@@ -10,12 +8,12 @@ use App\Filament\Resources\AmiChecklistItems\Pages\ListAmiChecklistItems;
 use App\Filament\Resources\AmiChecklistItems\Schemas\AmiChecklistItemForm;
 use App\Filament\Resources\AmiChecklistItems\Tables\AmiChecklistItemsTable;
 use App\Models\AmiChecklistItem;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use BackedEnum;
 use UnitEnum;
 
 class AmiChecklistItemResource extends Resource
@@ -33,14 +31,15 @@ class AmiChecklistItemResource extends Resource
         $user = auth()->user();
         $query = parent::getEloquentQuery();
 
-        if (! $user || $user->isSuperAdmin()) {
+        if (!$user || $user->isSuperAdmin()) {
             return $query;
         }
 
         return $query->whereHas('cycle.perguruanTinggi', function (Builder $builder) use ($user): void {
-            $builder->when($user->perguruan_tinggi_id, fn (Builder $q): Builder => $q->whereKey($user->perguruan_tinggi_id))
-                ->when(! $user->perguruan_tinggi_id && $user->yayasan_id, fn (Builder $q): Builder => $q->where('yayasan_id', $user->yayasan_id))
-                ->when(! $user->perguruan_tinggi_id && ! $user->yayasan_id, fn (Builder $q): Builder => $q->whereKey(0));
+            $builder
+                ->when($user->perguruan_tinggi_id, fn(Builder $q): Builder => $q->whereKey($user->perguruan_tinggi_id))
+                ->when(!$user->perguruan_tinggi_id && $user->yayasan_id, fn(Builder $q): Builder => $q->where('yayasan_id', $user->yayasan_id))
+                ->when(!$user->perguruan_tinggi_id && !$user->yayasan_id, fn(Builder $q): Builder => $q->whereKey(0));
         });
     }
 

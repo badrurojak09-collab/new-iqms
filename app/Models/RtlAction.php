@@ -1,19 +1,18 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RtlAction extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ScopedByTenant;
 
     protected $table = 'rtl_actions';
 
@@ -24,6 +23,14 @@ class RtlAction extends Model
     protected function casts(): array
     {
         return ['due_date' => 'date', 'progress_percent' => 'integer', 'verified_at' => 'datetime'];
+    }
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
+        ];
     }
 
     public function perguruanTinggi(): BelongsTo

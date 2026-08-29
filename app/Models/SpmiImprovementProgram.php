@@ -1,21 +1,28 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SpmiImprovementProgram extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ScopedByTenant;
 
     protected $table = 'spmi_improvement_programs';
 
     protected $fillable = ['spmi_evaluation_id', 'effectiveness_review_id', 'spmi_indicator_id', 'spmi_target_id', 'perguruan_tinggi_id', 'program_studi_id', 'accreditation_id', 're_evaluation_status', 're_evaluation_error', 're_evaluation_requested_at', 'code', 'title', 'action_plan', 'owner_id', 'due_date', 'progress_percent', 'status', 'completion_notes', 'verified_by', 'verified_at'];
+
+    protected static function tenantScopeColumns(): array
+    {
+        return [
+            'perguruan_tinggi' => 'perguruan_tinggi_id',
+            'program_studi' => 'program_studi_id',
+        ];
+    }
 
     protected function casts(): array
     {

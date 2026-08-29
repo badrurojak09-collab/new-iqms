@@ -9,13 +9,14 @@ use App\Filament\Resources\ProgramStudis\Schemas\ProgramStudiForm;
 use App\Filament\Resources\ProgramStudis\Tables\ProgramStudisTable;
 use App\Filament\Support\TenantAwareGlobalSearch;
 use App\Models\ProgramStudi;
-use BackedEnum;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use BackedEnum;
 
 class ProgramStudiResource extends Resource
 {
@@ -59,6 +60,15 @@ class ProgramStudiResource extends Resource
             'create' => CreateProgramStudi::route('/create'),
             'edit' => EditProgramStudi::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forProgramStudi(
+            parent::getEloquentQuery(),
+            auth()->user(),
+            'id'  // Pakai 'id' karena ini Resource ProgramStudi itu sendiri
+        );
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder

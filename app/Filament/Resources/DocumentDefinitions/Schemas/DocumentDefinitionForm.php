@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\DocumentDefinitions\Schemas;
 
@@ -24,17 +22,30 @@ class DocumentDefinitionForm
                     TextInput::make('code')->label('Kode Dokumen')->required()->maxLength(100)->unique(ignoreRecord: true),
                     TextInput::make('name')->label('Nama Dokumen')->required()->maxLength(255),
                     Select::make('domain')->label('Sumber Modul')->options([
-                        'spmi' => 'SPMI', 'ami' => 'AMI', 'rtm' => 'RTM', 'rtl' => 'RTL', 'accreditation' => 'Akreditasi', 'reporting' => 'Reporting',
+                        'spmi' => 'SPMI',
+                        'ami' => 'AMI',
+                        'rtm' => 'RTM',
+                        'rtl' => 'RTL',
+                        'accreditation' => 'Akreditasi',
+                        'reporting' => 'Reporting',
                     ])->required(),
                     Select::make('scope_type')->label('Tingkat Scope')->options([
-                        'yayasan' => 'Yayasan', 'perguruan_tinggi' => 'Perguruan Tinggi', 'upps' => 'UPPS/Unit Pengelola', 'program_studi' => 'Program Studi',
+                        'yayasan' => 'Yayasan',
+                        'perguruan_tinggi' => 'Perguruan Tinggi',
+                        'upps' => 'UPPS/Unit Pengelola',
+                        'program_studi' => 'Program Studi',
                     ])->placeholder('Tidak dibatasi'),
                     CheckboxList::make('supported_formats')->label('Format yang Didukung')->options([
-                        'pdf' => 'PDF', 'docx' => 'Word (DOCX)', 'xlsx' => 'Excel (XLSX)', 'html' => 'Pratinjau HTML',
+                        'pdf' => 'PDF',
+                        'docx' => 'Word (DOCX)',
+                        'xlsx' => 'Excel (XLSX)',
+                        'html' => 'Pratinjau HTML',
                     ])->columns(4)->required(),
                     Textarea::make('description')->label('Deskripsi')->rows(3)->columnSpanFull(),
                     Toggle::make('is_active')->label('Aktif')->default(true),
-                ])->columns(2),
+                ])
+                ->columns(2)
+                ->columnSpanFull(),
         ]);
     }
 }
