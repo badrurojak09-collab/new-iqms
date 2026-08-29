@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
@@ -20,8 +18,8 @@ class VerifiedSpmiProgramsChart extends ChartWidget
     protected function getData(): array
     {
         $ptId = app(TenantContext::class)->perguruanTinggiId();
-        $months = collect(range(5, 0))->map(fn (int $monthsAgo) => Carbon::now()->subMonths($monthsAgo)->startOfMonth());
-        $data = $ptId === null ? $months->map(fn (): int => 0) : $months->map(function (Carbon $month) use ($ptId): int {
+        $months = collect(range(5, 0))->map(fn(int $monthsAgo) => Carbon::now()->subMonths($monthsAgo)->startOfMonth());
+        $data = $ptId === null ? $months->map(fn(): int => 0) : $months->map(function (Carbon $month) use ($ptId): int {
             return SpmiImprovementProgram::query()
                 ->where('perguruan_tinggi_id', $ptId)
                 ->where('status', 'verified')
@@ -38,7 +36,7 @@ class VerifiedSpmiProgramsChart extends ChartWidget
                 'fill' => true,
                 'tension' => 0.3,
             ]],
-            'labels' => $months->map(fn (Carbon $month): string => $month->format('M Y'))->all(),
+            'labels' => $months->map(fn(Carbon $month): string => $month->format('M Y'))->all(),
         ];
     }
 

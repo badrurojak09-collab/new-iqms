@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
@@ -30,7 +28,7 @@ class PpeppQualityCharts extends ChartWidget
         return [
             'datasets' => [[
                 'label' => 'Program peningkatan',
-                'data' => collect($statuses)->map(fn (string $status): int => (int) ($counts[$status] ?? 0))->all(),
+                'data' => collect($statuses)->map(fn(string $status): int => (int) ($counts[$status] ?? 0))->all(),
                 'backgroundColor' => ['#94a3b8', '#f59e0b', '#3b82f6', '#16a34a'],
             ]],
             'labels' => ['Planned', 'In progress', 'Completed', 'Verified'],
