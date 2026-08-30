@@ -19,6 +19,7 @@ class AssessmentThresholdsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['instrumentVersion', 'element', 'indicator']))
             ->columns([
                 TextColumn::make('code')->label('Kode Ambang Batas')->searchable()->sortable()->copyable(),
                 TextColumn::make('name')->label('Nama Ambang Batas')->searchable()->wrap(),

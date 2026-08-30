@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiImprovementPrograms\Schemas;
 
@@ -8,12 +6,14 @@ use App\Models\Accreditation;
 use App\Models\SpmiEvaluation;
 use App\Models\SpmiIndicator;
 use App\Models\SpmiTarget;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class SpmiImprovementProgramForm
 {
@@ -28,48 +28,53 @@ class SpmiImprovementProgramForm
                 ->schema([
                     Select::make('spmi_evaluation_id')
                         ->label('Evaluasi SPMI')
-                        ->relationship('evaluation', 'id')
-                        ->getOptionLabelFromRecordUsing(fn (SpmiEvaluation $record): string => self::evaluationLabel($record))
+                        ->relationship(
+                            'evaluation',
+                            'id',
+                            modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forOptionalProgramStudi($query, auth()->user())
+                                ->with('realization.indicator')  // Eager load relasi realization & indicator untuk mencegah lazy loading
+                        )
+                        ->getOptionLabelFromRecordUsing(fn(SpmiEvaluation $record): string => self::evaluationLabel($record))
                         ->searchable()
                         ->preload()
                         ->helperText('Opsional. Pilih evaluasi yang menjadi dasar program peningkatan.'),
                     Select::make('spmi_indicator_id')
                         ->label('Indikator SPMI')
-                        ->options(fn (): array => SpmiIndicator::query()
+                        ->options(fn(): array => SpmiIndicator::query()
                             ->orderBy('code')
                             ->get()
-                            ->mapWithKeys(fn (SpmiIndicator $item): array => [$item->id => $item->code.' — '.$item->name])
+                            ->mapWithKeys(fn(SpmiIndicator $item): array => [$item->id => $item->code . ' — ' . $item->name])
                             ->all())
                         ->searchable()
                         ->preload(),
                     Select::make('spmi_target_id')
                         ->label('Target SPMI')
-                        ->options(fn (): array => SpmiTarget::query()
+                        ->options(fn(): array => SpmiTarget::query()
                             ->with('indicator')
                             ->latest('period_year')
                             ->get()
-                            ->mapWithKeys(fn (SpmiTarget $item): array => [
-                                $item->id => ($item->indicator?->code ?? 'Indikator').' — Tahun '.$item->period_year.' — '.($item->target_numeric ?? $item->target_text ?? 'Belum diisi'),
+                            ->mapWithKeys(fn(SpmiTarget $item): array => [
+                                $item->id => ($item->indicator?->code ?? 'Indikator') . ' — Tahun ' . $item->period_year . ' — ' . ($item->target_numeric ?? $item->target_text ?? 'Belum diisi'),
                             ])
                             ->all())
                         ->searchable()
                         ->preload(),
                     Select::make('accreditation_id')
                         ->label('Kegiatan Akreditasi')
-                        ->relationship('accreditation', 'title')
-                        ->getOptionLabelFromRecordUsing(fn (Accreditation $record): string => self::accreditationLabel($record))
+                        ->relationship('accreditation', 'title', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forOptionalProgramStudi($query, auth()->user()))
+                        ->getOptionLabelFromRecordUsing(fn(Accreditation $record): string => self::accreditationLabel($record))
                         ->searchable()
                         ->preload()
                         ->helperText('Opsional. Hubungkan program dengan kegiatan akreditasi terkait.'),
                     Select::make('perguruan_tinggi_id')
                         ->label('Perguruan Tinggi')
-                        ->relationship('perguruanTinggi', 'nama_pt')
+                        ->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))
                         ->required()
                         ->searchable()
                         ->preload(),
                     Select::make('program_studi_id')
                         ->label('Program Studi')
-                        ->relationship('programStudi', 'nama_prodi')
+                        ->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))
                         ->searchable()
                         ->preload()
                         ->helperText('Kosongkan jika program berlaku pada tingkat perguruan tinggi.'),
@@ -144,6 +149,6 @@ class SpmiImprovementProgramForm
 
     private static function accreditationLabel(Accreditation $record): string
     {
-        return sprintf('%s%s', $record->code ?: 'Akreditasi', $record->title ? ' — '.$record->title : '');
+        return sprintf('%s%s', $record->code ?: 'Akreditasi', $record->title ? ' — ' . $record->title : '');
     }
 }

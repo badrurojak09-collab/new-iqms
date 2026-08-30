@@ -1,21 +1,22 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiTargets;
 
 use App\Filament\Resources\SpmiTargets\Pages\CreateSpmiTarget;
 use App\Filament\Resources\SpmiTargets\Pages\EditSpmiTarget;
 use App\Filament\Resources\SpmiTargets\Pages\ListSpmiTargets;
+use App\Filament\Resources\SpmiTargets\RelationManagers\RealizationsRelationManager;
 use App\Filament\Resources\SpmiTargets\Schemas\SpmiTargetForm;
 use App\Filament\Resources\SpmiTargets\Tables\SpmiTargetsTable;
 use App\Models\SpmiTarget;
-use BackedEnum;
-use UnitEnum;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use BackedEnum;
+use UnitEnum;
 
 class SpmiTargetResource extends Resource
 {
@@ -35,6 +36,16 @@ class SpmiTargetResource extends Resource
     public static function table(Table $table): Table
     {
         return SpmiTargetsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forOptionalProgramStudi(parent::getEloquentQuery(), auth()->user());
+    }
+
+    public static function getRelations(): array
+    {
+        return [RealizationsRelationManager::class];
     }
 
     public static function getPages(): array

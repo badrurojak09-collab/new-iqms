@@ -19,6 +19,7 @@ class AssessmentRubricsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['instrumentVersion', 'approver']))
             ->columns([
                 TextColumn::make('label')->label('Label Rubrik')->searchable()->sortable(),
                 TextColumn::make('instrumentVersion.version_label')->label('Versi Instrumen')->sortable()->searchable(),

@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SpmiTarget extends Model
 {
-    use HasFactory, ScopedByTenant;
+    use HasFactory, ScopedByTenant, SoftDeletes;
 
     protected $table = 'spmi_targets';
 
@@ -46,5 +48,10 @@ class SpmiTarget extends Model
     public function setter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'set_by');
+    }
+
+    public function realizations(): HasMany
+    {
+        return $this->hasMany(SpmiRealization::class);
     }
 }

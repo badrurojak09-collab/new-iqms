@@ -17,6 +17,7 @@ class AssessmentIndicatorsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['element']))
             ->columns([
                 TextColumn::make('element.title')->label('Elemen Penilaian')->wrap()->searchable(),
                 TextColumn::make('code')->label('Kode Indikator')->searchable()->sortable()->copyable(),

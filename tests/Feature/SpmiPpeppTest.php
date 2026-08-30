@@ -25,6 +25,7 @@ final class SpmiPpeppTest extends TestCase
     public function test_verified_realization_is_evaluated_against_target(): void
     {
         [$user, $indicator, $pt] = $this->createSpmiContext();
+        $this->actingAs($user);
         $target = SpmiTarget::query()->create([
             'spmi_indicator_id' => $indicator->id,
             'perguruan_tinggi_id' => $pt->id,
@@ -56,6 +57,7 @@ final class SpmiPpeppTest extends TestCase
     public function test_unverified_realization_cannot_enter_evaluation_stage(): void
     {
         [$user, $indicator, $pt] = $this->createSpmiContext();
+        $this->actingAs($user);
         $target = SpmiTarget::query()->create([
             'spmi_indicator_id' => $indicator->id,
             'perguruan_tinggi_id' => $pt->id,

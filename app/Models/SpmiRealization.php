@@ -6,11 +6,12 @@ use App\Models\Concerns\ScopedByTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class SpmiRealization extends Model
 {
-    use HasFactory, ScopedByTenant;
+    use HasFactory, ScopedByTenant, SoftDeletes;
 
     protected $table = 'spmi_realizations';
 

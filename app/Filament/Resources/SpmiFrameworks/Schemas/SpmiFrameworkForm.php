@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiFrameworks\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\PerguruanTinggi;
 use Filament\Forms\Components\DatePicker;
@@ -25,7 +27,7 @@ class SpmiFrameworkForm
                 ->schema([
                     Select::make('perguruan_tinggi_id')
                         ->label('Perguruan Tinggi')
-                        ->relationship('perguruanTinggi', 'nama_pt')
+                        ->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))
                         ->searchable()
                         ->preload()
                         ->required(),

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiStandards\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -22,9 +24,9 @@ class SpmiStandardForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                        Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name')->searchable()->preload()->required(),
-                        Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt')->searchable()->preload()->required(),
-                        Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi')->searchable()->preload(),
+                        Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
+                        Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
+                        Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))->searchable()->preload(),
                         TextInput::make('code')->label('Kode Standar')->required()->alphaDash()->maxLength(50)->unique(ignoreRecord: true),
                         TextInput::make('name')->label('Nama Standar')->required()->maxLength(255),
                         Select::make('status')->label('Status')->options(['draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan'])->default('draft')->required(),

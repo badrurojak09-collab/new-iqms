@@ -1,16 +1,16 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiEvaluations\Schemas;
 
 use App\Models\SpmiRealization;
+use App\Support\Tenancy\TenantQuery;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class SpmiEvaluationForm
 {
@@ -23,31 +23,68 @@ class SpmiEvaluationForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                        Select::make('spmi_realization_id')
-                            ->label('Realisasi SPMI')
-                            ->relationship('realization', 'id')
-                            ->getOptionLabelFromRecordUsing(fn (SpmiRealization $record): string => self::realizationLabel($record))
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->helperText('Pilih realisasi berdasarkan indikator, tahun, nilai, dan status. ID teknis tidak ditampilkan.'),
-                        Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt')->searchable()->preload()->required(),
-                        Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi')->searchable()->preload(),
-                        Select::make('result')
-                            ->label('Hasil Evaluasi')
-                            ->options([
-                                'met' => 'Tercapai (Met)',
-                                'partially_met' => 'Tercapai Sebagian (Partially Met)',
-                                'not_met' => 'Belum Tercapai (Not Met)',
-                            ])
-                            ->native(false)
-                            ->required()
-                            ->helperText('Tercapai: target terpenuhi. Tercapai Sebagian: ada kemajuan tetapi target belum sepenuhnya terpenuhi. Belum Tercapai: target belum terpenuhi.'),
-                        TextInput::make('achievement_percentage')->label('Persentase Ketercapaian')->numeric()->minValue(0)->maxValue(100),
-                        Textarea::make('analysis')->label('Analisis')->rows(4)->columnSpanFull(),
-                        Textarea::make('root_cause')->label('Akar Masalah')->rows(4)->columnSpanFull(),
-                        Textarea::make('recommendation')->label('Rekomendasi')->rows(4)->columnSpanFull(),
-                        Select::make('status')->label('Status')->options(['draft' => 'Draf', 'submitted' => 'Diajukan', 'completed' => 'Selesai', 'approved' => 'Disetujui', 'rejected' => 'Ditolak'])->default('draft')->required(),
+                    Select::make('spmi_realization_id')
+                        ->label('Realisasi SPMI')
+                        ->relationship(
+                            'realization',
+                            'id',
+                            modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forOptionalProgramStudi($query, auth()->user())
+                                ->with('indicator')  // Eager load relasi indicator untuk mencegah lazy loading
+                        )
+                        ->getOptionLabelFromRecordUsing(fn(SpmiRealization $record): string => self::realizationLabel($record))
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->helperText('Pilih realisasi berdasarkan indikator, tahun, nilai, dan status. ID teknis tidak ditampilkan.'),
+                    Select::make('perguruan_tinggi_id')
+                        ->label('Perguruan Tinggi')
+                        ->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Select::make('program_studi_id')
+                        ->label('Program Studi')
+                        ->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))
+                        ->searchable()
+                        ->preload(),
+                    Select::make('result')
+                        ->label('Hasil Evaluasi')
+                        ->options([
+                            'met' => 'Tercapai (Met)',
+                            'partially_met' => 'Tercapai Sebagian (Partially Met)',
+                            'not_met' => 'Belum Tercapai (Not Met)',
+                        ])
+                        ->native(false)
+                        ->required()
+                        ->helperText('Tercapai: target terpenuhi. Tercapai Sebagian: ada kemajuan tetapi target belum sepenuhnya terpenuhi. Belum Tercapai: target belum terpenuhi.'),
+                    TextInput::make('achievement_percentage')
+                        ->label('Persentase Ketercapaian')
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(100),
+                    Textarea::make('analysis')
+                        ->label('Analisis')
+                        ->rows(4)
+                        ->columnSpanFull(),
+                    Textarea::make('root_cause')
+                        ->label('Akar Masalah')
+                        ->rows(4)
+                        ->columnSpanFull(),
+                    Textarea::make('recommendation')
+                        ->label('Rekomendasi')
+                        ->rows(4)
+                        ->columnSpanFull(),
+                    Select::make('status')
+                        ->label('Status')
+                        ->options([
+                            'draft' => 'Draf',
+                            'submitted' => 'Diajukan',
+                            'completed' => 'Selesai',
+                            'approved' => 'Disetujui',
+                            'rejected' => 'Ditolak',
+                        ])
+                        ->default('draft')
+                        ->required(),
                 ]),
         ]);
     }

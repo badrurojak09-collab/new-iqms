@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiIndicators;
 
+use App\Filament\Resources\SpmiIndicators\RelationManagers\TargetsRelationManager;
 use App\Filament\Resources\SpmiIndicators\Pages\CreateSpmiIndicator;
 use App\Filament\Resources\SpmiIndicators\Pages\EditSpmiIndicator;
 use App\Filament\Resources\SpmiIndicators\Pages\ListSpmiIndicators;
 use App\Filament\Resources\SpmiIndicators\Schemas\SpmiIndicatorForm;
 use App\Filament\Resources\SpmiIndicators\Tables\SpmiIndicatorsTable;
 use App\Models\SpmiIndicator;
+use App\Support\Tenancy\TenantQuery;
 use BackedEnum;
 use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SpmiIndicatorResource extends Resource
 {
@@ -35,6 +38,16 @@ class SpmiIndicatorResource extends Resource
     public static function table(Table $table): Table
     {
         return SpmiIndicatorsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forPerguruanTinggi(parent::getEloquentQuery(), auth()->user());
+    }
+
+    public static function getRelations(): array
+    {
+        return [TargetsRelationManager::class];
     }
 
     public static function getPages(): array

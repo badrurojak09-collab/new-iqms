@@ -19,6 +19,7 @@ class AmiCyclesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['perguruanTinggi', 'programStudi']))
             ->columns([
                 TextColumn::make('code')->label('Kode')->searchable()->sortable(),
                 TextColumn::make('name')->label('Nama Siklus')->searchable()->sortable(),

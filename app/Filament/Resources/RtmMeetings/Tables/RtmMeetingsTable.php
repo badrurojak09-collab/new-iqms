@@ -16,6 +16,7 @@ class RtmMeetingsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['perguruanTinggi', 'programStudi', 'amiCycle']))
             ->columns([
                 TextColumn::make('code')->label('Kode')->searchable()->sortable(),
                 TextColumn::make('title')->label('Judul Rapat')->searchable()->sortable(),

@@ -17,6 +17,7 @@ class UserTenantScopesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['user', 'role']))
             ->columns([
                 TextColumn::make('user.name')->label('Pengguna')->searchable()->sortable(),
                 TextColumn::make('scope_type')->label('Tipe Scope')->formatStateUsing(fn (?string $state): string => match ($state) {

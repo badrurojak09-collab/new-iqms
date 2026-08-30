@@ -7,6 +7,8 @@ namespace App\Filament\Resources\SpmiFrameworks\Tables;
 use App\Models\SpmiFramework;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -40,6 +42,8 @@ class SpmiFrameworksTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])

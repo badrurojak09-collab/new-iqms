@@ -6,10 +6,13 @@ namespace App\Filament\Resources\SpmiIndicators\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\TrashedFilter;
 
 class SpmiIndicatorsTable
 {
@@ -24,7 +27,10 @@ class SpmiIndicatorsTable
                 TextColumn::make('unit')->label('Satuan')->placeholder('—'),
                 TextColumn::make('status')->label('Status')->badge(),
             ])
+            ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
+                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])

@@ -16,6 +16,7 @@ class AssessmentElementsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['criterion.instrumentVersion', 'instrumentNode']))
             ->columns([
                 TextColumn::make('criterion.instrumentVersion.version_label')->label('Versi Instrumen')->sortable()->searchable(),
                 TextColumn::make('criterion.name')->label('Kriteria Penilaian')->wrap()->searchable(),

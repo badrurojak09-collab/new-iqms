@@ -8,6 +8,7 @@ use App\Domain\Ami\AmiCycleLifecycleService;
 use App\Models\AmiCycle;
 use App\Models\AmiFinding;
 use App\Models\PerguruanTinggi;
+use App\Models\ProgramStudi;
 use App\Models\RtlAction;
 use App\Models\RtmDecision;
 use App\Models\RtmMeeting;
@@ -24,6 +25,7 @@ final class AmiRtmRtlTest extends TestCase
     public function test_finding_flows_from_ami_to_rtm_and_rtl(): void
     {
         [$user, $pt] = $this->context();
+        $this->actingAs($user);
         $cycle = AmiCycle::query()->create([
             'perguruan_tinggi_id' => $pt->id,
             'code' => 'AMI-2026',
@@ -110,6 +112,7 @@ final class AmiRtmRtlTest extends TestCase
     {
         $yayasan = Yayasan::query()->create(['nama' => 'Yayasan AMI', 'kode' => uniqid('YA')]);
         $pt = PerguruanTinggi::query()->create(['yayasan_id' => $yayasan->id, 'nama_pt' => 'PT AMI', 'kode_pt' => uniqid('PT')]);
+        ProgramStudi::query()->create(['perguruan_tinggi_id' => $pt->id, 'nama_prodi' => 'Prodi AMI', 'kode_prodi' => uniqid('PAMI')]);
         $user = User::factory()->create(['yayasan_id' => $yayasan->id, 'perguruan_tinggi_id' => $pt->id]);
 
         return [$user, $pt];

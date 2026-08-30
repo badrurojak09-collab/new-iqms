@@ -27,10 +27,27 @@ trait HasTenantScope
             });
     }
 
+    private ?Collection $cachedAccessibleYayasanIds = null;
+
+    private ?Collection $cachedAccessiblePerguruanTinggiIds = null;
+
+    private ?Collection $cachedAccessibleProgramStudiIds = null;
+
+    public function flushTenantScopeCache(): void
+    {
+        $this->cachedAccessibleYayasanIds = null;
+        $this->cachedAccessiblePerguruanTinggiIds = null;
+        $this->cachedAccessibleProgramStudiIds = null;
+    }
+
     public function accessibleYayasanIds(): Collection
     {
+        if ($this->cachedAccessibleYayasanIds !== null) {
+            return $this->cachedAccessibleYayasanIds;
+        }
+
         if ($this->isSuperAdmin()) {
-            return Yayasan::query()->pluck('id');
+            return $this->cachedAccessibleYayasanIds = Yayasan::query()->pluck('id');
         }
 
         $ids = $this
@@ -48,13 +65,17 @@ trait HasTenantScope
             $ids->push($this->yayasan_id);
         }
 
-        return $this->normalizeTenantIds($ids);
+        return $this->cachedAccessibleYayasanIds = $this->normalizeTenantIds($ids);
     }
 
     public function accessiblePerguruanTinggiIds(): Collection
     {
+        if ($this->cachedAccessiblePerguruanTinggiIds !== null) {
+            return $this->cachedAccessiblePerguruanTinggiIds;
+        }
+
         if ($this->isSuperAdmin()) {
-            return PerguruanTinggi::query()->pluck('id');
+            return $this->cachedAccessiblePerguruanTinggiIds = PerguruanTinggi::query()->pluck('id');
         }
 
         $ids = $this
@@ -78,18 +99,22 @@ trait HasTenantScope
             $ids->push($this->perguruan_tinggi_id);
         }
 
-        return $this->normalizeTenantIds($ids);
+        return $this->cachedAccessiblePerguruanTinggiIds = $this->normalizeTenantIds($ids);
     }
 
     public function accessibleProgramStudiIds(): Collection
     {
+        if ($this->cachedAccessibleProgramStudiIds !== null) {
+            return $this->cachedAccessibleProgramStudiIds;
+        }
+
         if ($this->isSuperAdmin()) {
-            return ProgramStudi::query()->pluck('id');
+            return $this->cachedAccessibleProgramStudiIds = ProgramStudi::query()->pluck('id');
         }
 
         $directAssignments = $this->programStudis()->pluck('program_studi.id');
         if ($directAssignments->isNotEmpty()) {
-            return $this->normalizeTenantIds($directAssignments);
+            return $this->cachedAccessibleProgramStudiIds = $this->normalizeTenantIds($directAssignments);
         }
 
         $scopes = $this->activeTenantScopes()->get(['scope_type', 'scope_id']);
@@ -118,7 +143,7 @@ trait HasTenantScope
             );
         }
 
-        return $this->normalizeTenantIds($ids);
+        return $this->cachedAccessibleProgramStudiIds = $this->normalizeTenantIds($ids);
     }
 
     public function canAccessYayasan(Yayasan|int|null $yayasan): bool

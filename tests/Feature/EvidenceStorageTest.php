@@ -23,6 +23,7 @@ final class EvidenceStorageTest extends TestCase
     {
         Storage::fake('local');
         [$user, $evidence] = $this->createEvidenceContext();
+        $this->actingAs($user);
         $file = UploadedFile::fake()->create('pedoman.pdf', 12, 'application/pdf');
 
         $version = app(StoreEvidenceDocument::class)->handle($user, $evidence, $file, 'initial upload');
@@ -38,6 +39,7 @@ final class EvidenceStorageTest extends TestCase
     {
         Storage::fake('local');
         [$user, $evidence] = $this->createEvidenceContext();
+        $this->actingAs($user);
         $version = app(StoreEvidenceDocument::class)->handle(
             $user,
             $evidence,
@@ -64,6 +66,7 @@ final class EvidenceStorageTest extends TestCase
             'nama_pt' => 'PT Evidence',
             'kode_pt' => uniqid('PTE'),
         ]);
+        \App\Models\ProgramStudi::query()->create(['perguruan_tinggi_id' => $pt->id, 'nama_prodi' => 'Prodi Evidence', 'kode_prodi' => uniqid('PRE')]);
         $user = User::factory()->create([
             'yayasan_id' => $yayasan->id,
             'perguruan_tinggi_id' => $pt->id,

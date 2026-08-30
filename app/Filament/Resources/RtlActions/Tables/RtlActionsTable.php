@@ -22,6 +22,7 @@ class RtlActionsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['perguruanTinggi', 'programStudi', 'owner', 'readinessGap']))
             ->columns([
                 TextColumn::make('code')->label('Kode RTL')->searchable()->sortable()->copyable(),
                 TextColumn::make('title')->label('Judul Tindak Lanjut')->searchable()->wrap(),

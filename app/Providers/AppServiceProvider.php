@@ -28,6 +28,7 @@ use App\Policies\RtmDecisionPolicy;
 use App\Policies\RtmMeetingPolicy;
 use App\Policies\UserTenantScopePolicy;
 use App\Support\Tenancy\TenantContext;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -46,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::preventLazyLoading(! $this->app->isProduction());
         UserTenantScope::observe(UserTenantScopeObserver::class);
         AmiCycle::observe(AmiCycleObserver::class);
         AmiFinding::observe(AmiFindingObserver::class);
