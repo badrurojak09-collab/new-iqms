@@ -30,6 +30,7 @@ use App\Policies\UserTenantScopePolicy;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -47,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventLazyLoading(! $this->app->isProduction());
+        Model::preventLazyLoading(!$this->app->isProduction());
         UserTenantScope::observe(UserTenantScopeObserver::class);
         AmiCycle::observe(AmiCycleObserver::class);
         AmiFinding::observe(AmiFindingObserver::class);
@@ -93,6 +94,9 @@ class AppServiceProvider extends ServiceProvider
             [\Spatie\Permission\Models\Role::class, \App\Policies\RolePolicy::class],
         ] as [$model, $policy]) {
             Gate::policy($model, $policy);
+        }
+        if (config('app.env') !== 'local' || isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            URL::forceScheme('https');
         }
     }
 }
