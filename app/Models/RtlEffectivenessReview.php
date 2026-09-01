@@ -6,13 +6,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class RtlEffectivenessReview extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['rtl_action_id', 'spmi_evaluation_id', 'reviewed_by', 'outcome', 'effectiveness_score', 'observed_result', 'evidence_summary', 'recommendation', 'ppepp_stage', 'follow_up_required', 'status', 'reviewed_at'];
 

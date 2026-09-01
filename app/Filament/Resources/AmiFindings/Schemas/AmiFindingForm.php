@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiFindings\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\AmiChecklistItem;
 use App\Models\AmiCycle;
@@ -25,7 +27,7 @@ class AmiFindingForm
                 ->schema([
                     Select::make('ami_cycle_id')
                         ->label('Siklus AMI')
-                        ->options(fn (): array => AmiCycle::query()->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())
+                        ->options(fn (): array => TenantQuery::forOptionalProgramStudi(AmiCycle::query(), auth()->user())->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())
                         ->searchable()
                         ->preload()
                         ->required(),

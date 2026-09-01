@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\RtlActions;
+use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\RtlActions\Pages\CreateRtlAction;
 use App\Filament\Resources\RtlActions\Pages\EditRtlAction;
@@ -33,6 +34,11 @@ class RtlActionResource extends Resource
 
     protected static ?string $pluralModelLabel = 'RTL Action';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forOptionalProgramStudi(parent::getEloquentQuery(), auth()->user());
+    }
+
     public static function form(Schema $schema): Schema
     {
         return RtlActionForm::configure($schema);
@@ -47,6 +53,7 @@ class RtlActionResource extends Resource
     {
         return [
             EffectivenessReviewsRelationManager::class,
+            \App\Filament\Resources\RtlActions\RelationManagers\EvidenceLinksRelationManager::class,
         ];
     }
 

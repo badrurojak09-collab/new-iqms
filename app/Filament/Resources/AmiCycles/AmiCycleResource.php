@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiCycles;
+use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\AmiCycles\Pages\CreateAmiCycle;
 use App\Filament\Resources\AmiCycles\Pages\EditAmiCycle;
@@ -18,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class AmiCycleResource extends Resource
@@ -29,6 +31,11 @@ class AmiCycleResource extends Resource
     protected static ?string $navigationLabel = 'Siklus AMI';
     protected static ?string $modelLabel = 'Siklus AMI';
     protected static ?string $pluralModelLabel = 'Siklus AMI';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forOptionalProgramStudi(parent::getEloquentQuery(), auth()->user());
+    }
 
     public static function form(Schema $schema): Schema
     {

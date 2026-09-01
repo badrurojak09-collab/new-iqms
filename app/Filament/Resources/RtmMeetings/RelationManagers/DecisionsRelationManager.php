@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\RtmMeetings\RelationManagers;
 
+use Illuminate\Database\Eloquent\Builder;
+use App\Support\Tenancy\TenantQuery;
 use App\Models\AmiFinding;
 use App\Models\ReadinessGap;
 use Filament\Forms\Components\Select;
@@ -35,8 +37,8 @@ class DecisionsRelationManager extends RelationManager
             ->headerActions([
                 \Filament\Actions\CreateAction::make()->label('Tambah Keputusan')->visible(fn (): bool => auth()->user()?->can('manage rtm') ?? false)->form([
                     TextInput::make('code')->label('Kode Keputusan')->required()->maxLength(80),
-                    Select::make('ami_finding_id')->label('Temuan AMI Terkait')->options(fn (): array => AmiFinding::query()->where('ami_cycle_id', $this->getOwnerRecord()->ami_cycle_id)->orderBy('code')->get()->mapWithKeys(fn (AmiFinding $finding): array => [$finding->id => $finding->code.' — '.str($finding->condition)->limit(80)])->all())->searchable()->preload(),
-                    Select::make('readiness_gap_id')->label('Gap Kesiapan Terkait')->options(fn (): array => ReadinessGap::query()->orderByDesc('id')->get()->mapWithKeys(fn (ReadinessGap $gap): array => [$gap->id => ($gap->item_key ?: 'Gap').' — '.str($gap->description ?: 'Tanpa deskripsi')->limit(80)])->all())->searchable()->preload(),
+                    Select::make('ami_finding_id')->label('Temuan AMI Terkait')->options(fn (): array => AmiFinding::query()->where('ami_cycle_id', $this->getOwnerRecord()->ami_cycle_id)->whereHas('cycle', fn (Builder $cycle): Builder => TenantQuery::forOptionalProgramStudi($cycle, auth()->user()))->orderBy('code')->get()->mapWithKeys(fn (AmiFinding $finding): array => [$finding->id => $finding->code.' — '.str($finding->condition)->limit(80)])->all())->searchable()->preload(),
+                    Select::make('readiness_gap_id')->label('Gap Kesiapan Terkait')->options(fn (): array => ReadinessGap::query()->whereHas('accreditation', fn (Builder $accreditation): Builder => TenantQuery::forOptionalProgramStudi($accreditation, auth()->user()))->orderByDesc('id')->get()->mapWithKeys(fn (ReadinessGap $gap): array => [$gap->id => ($gap->item_key ?: 'Gap').' — '.str($gap->description ?: 'Tanpa deskripsi')->limit(80)])->all())->searchable()->preload(),
                     Textarea::make('decision')->label('Isi Keputusan')->required()->rows(4)->columnSpanFull(),
                     Textarea::make('rationale')->label('Dasar Pertimbangan')->rows(4)->columnSpanFull(),
                     Select::make('status')->label('Status Keputusan')->options(['draft' => 'Draf', 'approved' => 'Disetujui', 'closed' => 'Ditutup'])->default('approved')->required(),

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Accreditation;
 use App\Models\AccreditationScoreSnapshot;
 use App\Models\AccreditationSubmission;
+use App\Models\AccreditationResponse;
 use App\Models\AmiChecklistItem;
 use App\Models\AmiCycle;
 use App\Models\AmiFinding;
@@ -20,6 +21,7 @@ use App\Observers\UserTenantScopeObserver;
 use App\Policies\AccreditationPolicy;
 use App\Policies\AccreditationScoreSnapshotPolicy;
 use App\Policies\AccreditationSubmissionPolicy;
+use App\Policies\AccreditationResponsePolicy;
 use App\Policies\AmiChecklistItemPolicy;
 use App\Policies\AmiCyclePolicy;
 use App\Policies\AmiFindingPolicy;
@@ -30,7 +32,6 @@ use App\Policies\UserTenantScopePolicy;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -48,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventLazyLoading(!$this->app->isProduction());
+        Model::preventLazyLoading(! $this->app->isProduction());
         UserTenantScope::observe(UserTenantScopeObserver::class);
         AmiCycle::observe(AmiCycleObserver::class);
         AmiFinding::observe(AmiFindingObserver::class);
@@ -59,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(DocumentGenerationRequest::class, DocumentGenerationRequestPolicy::class);
         Gate::policy(AccreditationScoreSnapshot::class, AccreditationScoreSnapshotPolicy::class);
         Gate::policy(AccreditationSubmission::class, AccreditationSubmissionPolicy::class);
+        Gate::policy(AccreditationResponse::class, AccreditationResponsePolicy::class);
         Gate::policy(AmiCycle::class, AmiCyclePolicy::class);
         Gate::policy(AmiFinding::class, AmiFindingPolicy::class);
         Gate::policy(AmiChecklistItem::class, AmiChecklistItemPolicy::class);
@@ -94,9 +96,6 @@ class AppServiceProvider extends ServiceProvider
             [\Spatie\Permission\Models\Role::class, \App\Policies\RolePolicy::class],
         ] as [$model, $policy]) {
             Gate::policy($model, $policy);
-        }
-        if (config('app.env') !== 'local' || isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            URL::forceScheme('https');
         }
     }
 }

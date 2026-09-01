@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\ReadinessRuns;
+use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\ReadinessRuns\Pages\CreateReadinessRun;
 use App\Filament\Resources\ReadinessRuns\Pages\EditReadinessRun;
@@ -15,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class ReadinessRunResource extends Resource
@@ -28,6 +30,16 @@ class ReadinessRunResource extends Resource
     protected static ?int $navigationSort = 50;
 
     protected static ?string $navigationLabel = 'Readiness Runs';
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+        if ($user?->isSuperAdmin()) {
+            return $query;
+        }
+        return $query->whereHas('accreditation', fn (Builder $accreditation): Builder => TenantQuery::forOptionalProgramStudi($accreditation, $user));
+    }
 
     public static function form(Schema $schema): Schema
     {

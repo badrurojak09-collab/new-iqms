@@ -116,7 +116,7 @@ trait ScopedByTenant
             $ptIds = $user->accessiblePerguruanTinggiIds()->all();
             $prodiIds = $user->accessibleProgramStudiIds()->all();
 
-            if ($ptIds === [] || $prodiIds === []) {
+            if ($ptIds === []) {
                 $this->denyTenantQuery($query);
                 return;
             }
@@ -128,7 +128,9 @@ trait ScopedByTenant
                         $nested->whereNull($prodiQualified);
                     }
 
-                    $nested->orWhereIn($prodiQualified, $prodiIds);
+                    if ($prodiIds !== []) {
+                        $nested->orWhereIn($prodiQualified, $prodiIds);
+                    }
                 });
 
             return;

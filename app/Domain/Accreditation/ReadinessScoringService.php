@@ -27,7 +27,7 @@ final class ReadinessScoringService
             ->whereHas('criterion', fn ($query) => $query->where('instrument_version_id', $accreditation->instrument_version_id))
             ->get();
         $mappings = $accreditation->instrumentVersion
-            ? $accreditation->instrumentVersion->mappings()->with(['sourceIndicator.element', 'targetElement'])->where('approval_status', 'approved')->get()
+            ? $accreditation->instrumentVersion->mappings()->with(['sourceIndicator.element', 'sourceIndicator.thresholds.rubric', 'targetElement'])->where('approval_status', 'approved')->get()
             : collect();
         $responses = $accreditation->responses;
         $results = $elements->map(fn (AssessmentElement $element): array => $this->evaluateElement($element, $mappings, $responses));
@@ -54,7 +54,7 @@ final class ReadinessScoringService
                 'completion_percent' => $completion,
                 'weighted_score' => $weightedScore,
                 'input_hash' => $inputHash,
-                'summary' => ['ready' => $ready, 'total' => $total, 'mapped_elements' => $results->whereNotEmpty('mapping_ids')->count()],
+                'summary' => ['ready' => $ready, 'total' => $total, 'mapped_elements' => $results->filter(fn (array $result): bool => ! empty($result['mapping_ids']))->count()],
                 'started_at' => now(),
                 'completed_at' => now(),
             ]);

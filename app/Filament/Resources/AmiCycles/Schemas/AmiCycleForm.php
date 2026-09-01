@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiCycles\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\InstrumentVersion;
 use App\Models\PerguruanTinggi;
@@ -27,13 +29,13 @@ class AmiCycleForm
                 ->schema([
                     Select::make('perguruan_tinggi_id')
                         ->label('Perguruan Tinggi')
-                        ->options(fn (): array => PerguruanTinggi::query()->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())
+                        ->options(fn (): array => TenantQuery::forPerguruanTinggi(PerguruanTinggi::query(), auth()->user())->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())
                         ->searchable()
                         ->preload()
                         ->required(),
                     Select::make('program_studi_id')
                         ->label('Program Studi')
-                        ->options(fn (): array => ProgramStudi::query()->orderBy('nama_prodi')->pluck('nama_prodi', 'id')->all())
+                        ->options(fn (): array => TenantQuery::forProgramStudi(ProgramStudi::query(), auth()->user())->orderBy('nama_prodi')->pluck('nama_prodi', 'id')->all())
                         ->searchable()
                         ->preload()
                         ->helperText('Kosongkan jika audit berada pada tingkat perguruan tinggi.'),
@@ -47,7 +49,7 @@ class AmiCycleForm
                         ->helperText('Opsional. Pilih instrumen yang digunakan untuk checklist audit.'),
                     Select::make('coordinator_id')
                         ->label('Koordinator AMI')
-                        ->options(fn (): array => User::query()->orderBy('name')->pluck('name', 'id')->all())
+                        ->options(fn (): array => User::query()->whereHas('tenantScopes')->orderBy('name')->pluck('name', 'id')->all())
                         ->searchable()
                         ->preload(),
                     TextInput::make('code')

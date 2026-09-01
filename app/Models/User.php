@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserTenantScope::class);
     }
+
+    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserProfile::class);
+    }
 }

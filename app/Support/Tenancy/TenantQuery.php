@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class TenantQuery
 {
-    public static function forYayasan(Builder $query, ?User $user, string $column = 'id'): Builder
+    public static function forYayasan(Builder $query, ?User $user, ?string $column = null): Builder
     {
         if ($user === null) {
             return $query->whereRaw('1 = 0');
@@ -19,12 +19,17 @@ final class TenantQuery
 
         $ids = $user->accessibleYayasanIds()->values()->all();
 
-        return $ids === []
-            ? $query->whereRaw('1 = 0')
-            : $query->whereIn($query->getModel()->qualifyColumn($column), $ids);
+        if ($ids === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        $model = $query->getModel();
+        $targetColumn = $column ?? ($model instanceof \App\Models\Yayasan || $model->getTable() === 'yayasan' ? $model->getKeyName() : 'yayasan_id');
+
+        return $query->whereIn($model->qualifyColumn($targetColumn), $ids);
     }
 
-    public static function forPerguruanTinggi(Builder $query, ?User $user, string $column = 'perguruan_tinggi_id'): Builder
+    public static function forPerguruanTinggi(Builder $query, ?User $user, ?string $column = null): Builder
     {
         if ($user === null) {
             return $query->whereRaw('1 = 0');
@@ -36,12 +41,17 @@ final class TenantQuery
 
         $ids = $user->accessiblePerguruanTinggiIds()->values()->all();
 
-        return $ids === []
-            ? $query->whereRaw('1 = 0')
-            : $query->whereIn($query->getModel()->qualifyColumn($column), $ids);
+        if ($ids === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        $model = $query->getModel();
+        $targetColumn = $column ?? ($model instanceof \App\Models\PerguruanTinggi || $model->getTable() === 'perguruan_tinggi' ? $model->getKeyName() : 'perguruan_tinggi_id');
+
+        return $query->whereIn($model->qualifyColumn($targetColumn), $ids);
     }
 
-    public static function forProgramStudi(Builder $query, ?User $user, string $column = 'program_studi_id'): Builder
+    public static function forProgramStudi(Builder $query, ?User $user, ?string $column = null): Builder
     {
         if ($user === null) {
             return $query->whereRaw('1 = 0');
@@ -53,9 +63,14 @@ final class TenantQuery
 
         $ids = $user->accessibleProgramStudiIds()->values()->all();
 
-        return $ids === []
-            ? $query->whereRaw('1 = 0')
-            : $query->whereIn($query->getModel()->qualifyColumn($column), $ids);
+        if ($ids === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        $model = $query->getModel();
+        $targetColumn = $column ?? ($model instanceof \App\Models\ProgramStudi || $model->getTable() === 'program_studi' ? $model->getKeyName() : 'program_studi_id');
+
+        return $query->whereIn($model->qualifyColumn($targetColumn), $ids);
     }
 
     public static function forOptionalProgramStudi(

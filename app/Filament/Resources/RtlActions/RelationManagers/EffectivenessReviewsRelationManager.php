@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\RtlActions\RelationManagers;
 
+use Illuminate\Database\Eloquent\Builder;
+use App\Support\Tenancy\TenantQuery;
 use App\Domain\Quality\RtlEffectivenessReviewService;
 use App\Models\Evidence;
 use App\Models\SpmiEvaluation;
@@ -57,7 +59,7 @@ class EffectivenessReviewsRelationManager extends RelationManager
                         Select::make('spmi_evaluation_id')->label('Evaluasi SPMI (Opsional)')->options(function (): array {
                             $ptId = $this->getOwnerRecord()->perguruan_tinggi_id;
 
-                            return SpmiEvaluation::query()->with('realization.indicator')->where('perguruan_tinggi_id', $ptId)->latest('id')->get()->mapWithKeys(function (SpmiEvaluation $evaluation): array {
+                            return TenantQuery::forOptionalProgramStudi(SpmiEvaluation::query(), auth()->user())->with('realization.indicator')->where('perguruan_tinggi_id', $ptId)->latest('id')->get()->mapWithKeys(function (SpmiEvaluation $evaluation): array {
                                 $realization = $evaluation->realization;
                                 $indicator = $realization?->indicator?->name ?? 'Realisasi tanpa indikator';
                                 $year = $realization?->period_year ?? '—';
@@ -81,7 +83,7 @@ class EffectivenessReviewsRelationManager extends RelationManager
             ])
             ->recordActions([
                 Action::make('attachOutcomeEvidence')->label('Lampirkan Bukti')->icon('heroicon-o-link')->visible(fn ($record): bool => (auth()->user()?->can('review rtl effectiveness') ?? false) && $record->status !== 'approved')->form([
-                    Select::make('evidence_id')->label('Evidence Cloud')->options(fn (): array => Evidence::query()->where('perguruan_tinggi_id', $this->getOwnerRecord()->perguruan_tinggi_id)->whereHas('versions', fn ($query) => $query->whereNotNull('external_url'))->orderBy('title')->pluck('title', 'id')->all())->searchable()->required(),
+                    Select::make('evidence_id')->label('Evidence Cloud')->options(fn (): array => TenantQuery::forPerguruanTinggi(Evidence::query(), auth()->user())->where('perguruan_tinggi_id', $this->getOwnerRecord()->perguruan_tinggi_id)->whereHas('versions.document', fn ($query) => $query->whereNotNull('external_url'))->orderBy('title')->pluck('title', 'id')->all())->searchable()->required(),
                     TextInput::make('label')->label('Label Bukti')->default('Evidence outcome tinjauan efektivitas'),
                 ])->action(function ($record, array $data): void {
                     app(RtlEffectivenessReviewService::class)->attachOutcomeEvidence($record, auth()->user(), (int) $data['evidence_id'], $data['label'] ?? null);

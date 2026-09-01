@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\RtlActions\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\ReadinessGap;
 use Filament\Forms\Components\DatePicker;

@@ -78,6 +78,15 @@ final class RuntimeScoringEngine
                 'status' => $response->status,
             ])->values()->all();
             $canonical = json_encode(['accreditation_id' => $accreditation->getKey(), 'instrument_version_id' => $result['instrument_version_id'], 'score' => $result['score'], 'rules' => $result['rules'], 'inputs' => $inputSnapshot], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+            $hash = hash('sha256', $canonical);
+
+            $existing = AccreditationScoreSnapshot::query()
+                ->where('snapshot_hash', $hash)
+                ->first();
+
+            if ($existing !== null) {
+                return $existing;
+            }
 
             return AccreditationScoreSnapshot::create([
                 'accreditation_id' => $accreditation->getKey(),
@@ -85,7 +94,7 @@ final class RuntimeScoringEngine
                 'calculated_by' => $userId,
                 'score' => $result['score'],
                 'status' => $result['status'],
-                'snapshot_hash' => hash('sha256', $canonical),
+                'snapshot_hash' => $hash,
                 'rule_results' => $result['rules'],
                 'input_snapshot' => $inputSnapshot,
                 'calculated_at' => now(),

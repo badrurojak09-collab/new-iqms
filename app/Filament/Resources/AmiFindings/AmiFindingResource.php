@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiFindings;
+use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\AmiFindings\Pages\CreateAmiFinding;
 use App\Filament\Resources\AmiFindings\Pages\EditAmiFinding;
@@ -30,18 +31,12 @@ class AmiFindingResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $user = auth()->user();
         $query = parent::getEloquentQuery();
-
-        if (! $user || $user->isSuperAdmin()) {
+        $user = auth()->user();
+        if ($user?->isSuperAdmin()) {
             return $query;
         }
-
-        return $query->whereHas('cycle.perguruanTinggi', function (Builder $builder) use ($user): void {
-            $builder->when($user->perguruan_tinggi_id, fn (Builder $q): Builder => $q->whereKey($user->perguruan_tinggi_id))
-                ->when(! $user->perguruan_tinggi_id && $user->yayasan_id, fn (Builder $q): Builder => $q->where('yayasan_id', $user->yayasan_id))
-                ->when(! $user->perguruan_tinggi_id && ! $user->yayasan_id, fn (Builder $q): Builder => $q->whereKey(0));
-        });
+        return $query->whereHas('cycle', fn (Builder $related): Builder => TenantQuery::forOptionalProgramStudi($related, $user));
     }
 
     public static function form(Schema $schema): Schema
@@ -52,6 +47,13 @@ class AmiFindingResource extends Resource
     public static function table(Table $table): Table
     {
         return AmiFindingsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            \App\Filament\Resources\AmiFindings\RelationManagers\EvidenceLinksRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

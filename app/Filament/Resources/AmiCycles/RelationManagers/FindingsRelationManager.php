@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiCycles\RelationManagers;
 
+use Illuminate\Database\Eloquent\Builder;
+use App\Support\Tenancy\TenantQuery;
 use App\Models\AmiChecklistItem;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -34,6 +36,13 @@ class FindingsRelationManager extends RelationManager
                     default => 'Sedang',
                 })->badge(),
                 TextColumn::make('condition')->label('Kondisi')->wrap()->limit(80),
+                TextColumn::make('evidenceLinks.evidence.title')
+                    ->label('Bukti Audit')
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('0 Bukti')
+                    ->limitList(1)
+                    ->expandableLimitedList(),
                 TextColumn::make('status')->label('Status')->formatStateUsing(fn (?string $state): string => match ($state) {
                     'in_progress' => 'Dalam Tindak Lanjut',
                     'closed' => 'Ditutup',
@@ -46,7 +55,7 @@ class FindingsRelationManager extends RelationManager
                     ->visible(fn (): bool => auth()->user()?->can('manage ami') || auth()->user()?->can('review ami'))
                     ->form([
                         TextInput::make('code')->label('Kode Temuan')->required()->maxLength(80),
-                        Select::make('ami_checklist_item_id')->label('Checklist Terkait')->options(fn (): array => AmiChecklistItem::query()->where('ami_cycle_id', $this->getOwnerRecord()->getKey())->orderBy('code')->pluck('code', 'id')->all())->searchable()->preload(),
+                        Select::make('ami_checklist_item_id')->label('Checklist Terkait')->options(fn (): array => AmiChecklistItem::query()->where('ami_cycle_id', $this->getOwnerRecord()->getKey())->whereHas('cycle', fn (Builder $cycle): Builder => TenantQuery::forOptionalProgramStudi($cycle, auth()->user()))->orderBy('code')->pluck('code', 'id')->all())->searchable()->preload(),
                         Select::make('classification')->label('Klasifikasi')->options(['observation' => 'Observasi', 'nonconformity' => 'Ketidaksesuaian', 'opportunity' => 'Peluang Perbaikan'])->default('observation')->required(),
                         Select::make('severity')->label('Tingkat Keparahan')->options(['low' => 'Rendah', 'medium' => 'Sedang', 'minor' => 'Minor', 'major' => 'Mayor'])->default('medium')->required(),
                         Textarea::make('condition')->label('Kondisi/Temuan')->required()->rows(4)->columnSpanFull(),
@@ -63,6 +72,63 @@ class FindingsRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
+                \Filament\Actions\Action::make('linkEvidence')
+                    ->label('Tautkan Bukti')
+                    ->icon('heroicon-o-paper-clip')
+                    ->color('info')
+                    ->visible(fn (): bool => auth()->user()?->can('manage ami') || auth()->user()?->can('review ami'))
+                    ->form([
+                        Select::make('evidence_id')
+                            ->label('Pilih Dokumen Bukti (Evidence Cloud)')
+                            ->options(function ($record): array {
+                                $ptId = $record->cycle?->perguruan_tinggi_id ?? $this->getOwnerRecord()->perguruan_tinggi_id;
+
+                                return \App\Models\Evidence::query()
+                                    ->when($ptId, fn ($q) => $q->where('perguruan_tinggi_id', $ptId))
+                                    ->whereHas('versions.document', fn ($query) => $query->whereNotNull('external_url'))
+                                    ->orderBy('title')
+                                    ->pluck('title', 'id')
+                                    ->all();
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->helperText('Hanya evidence dengan versi tautan cloud yang tersedia yang ditampilkan.'),
+                        Select::make('relation_type')
+                            ->label('Jenis Bukti')
+                            ->options([
+                                'audit_evidence' => 'Bukti Temuan Lapangan',
+                                'supporting_evidence' => 'Bukti Pendukung',
+                                'policy_document' => 'Dokumen Acuan Standar',
+                            ])
+                            ->default('audit_evidence')
+                            ->required(),
+                        TextInput::make('citation_page')
+                            ->label('Halaman / Bab Rujukan')
+                            ->placeholder('Contoh: Hlm. 12 atau Lampiran 1')
+                            ->maxLength(100),
+                        TextInput::make('citation_note')
+                            ->label('Catatan Keterangan')
+                            ->placeholder('Catatan konteks bukti temuan...')
+                            ->maxLength(255),
+                    ])
+                    ->action(function (\App\Models\AmiFinding $record, array $data): void {
+                        \App\Models\EvidenceLink::query()->updateOrCreate([
+                            'evidence_id' => $data['evidence_id'],
+                            'linkable_type' => \App\Models\AmiFinding::class,
+                            'linkable_id' => $record->getKey(),
+                        ], [
+                            'relation_type' => $data['relation_type'],
+                            'citation_page' => $data['citation_page'] ?? null,
+                            'citation_note' => $data['citation_note'] ?? null,
+                            'is_required' => true,
+                        ]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Bukti audit berhasil ditautkan ke temuan AMI.')
+                            ->success()
+                            ->send();
+                    }),
                 \Filament\Actions\EditAction::make()->label('Edit')->visible(fn (): bool => auth()->user()?->can('manage ami') || auth()->user()?->can('review ami')),
                 \Filament\Actions\DeleteAction::make()->label('Hapus')->visible(fn (): bool => auth()->user()?->can('manage ami')),
             ])

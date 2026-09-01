@@ -7,6 +7,7 @@ namespace App\Domain\Quality;
 use App\Models\AuditLog;
 use App\Models\RtlAction;
 use App\Models\User;
+use App\Support\Tenancy\TenantQuery;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -28,6 +29,7 @@ final class RtlActionLifecycleService
             throw new InvalidArgumentException("Transisi RTL {$fromStatus} ke {$toStatus} tidak diizinkan.");
         }
         $this->authorize($actor, $toStatus);
+        $this->guardTenantIntegrity($action, $actor);
 
         return DB::transaction(function () use ($action, $actor, $fromStatus, $toStatus, $reason): RtlAction {
             if ($toStatus === 'verified' && ! $action->loadMissing('evidenceLinks.evidence')->evidenceLinks->contains(fn ($link): bool => $link->evidence?->status === 'verified')) {
@@ -55,6 +57,20 @@ final class RtlActionLifecycleService
 
             return $action;
         });
+    }
+
+    private function guardTenantIntegrity(RtlAction $action, User $actor): void
+    {
+        $action->loadMissing('finding.cycle', 'decision.meeting', 'readinessGap');
+        $ptId = (int) $action->perguruan_tinggi_id;
+        foreach ([$action->finding?->cycle?->perguruan_tinggi_id, $action->decision?->meeting?->perguruan_tinggi_id, $action->readinessGap?->perguruan_tinggi_id] as $relatedPtId) {
+            if ($relatedPtId !== null && (int) $relatedPtId !== $ptId) {
+                throw new InvalidArgumentException('Relasi RTL harus berada pada Perguruan Tinggi yang sama.');
+            }
+        }
+        if (! TenantQuery::canAccessTenantRecord($actor, $action->perguruan_tinggi_id, $action->program_studi_id)) {
+            throw new InvalidArgumentException('RTL berada di luar tenant pengguna.');
+        }
     }
 
     private function authorize(User $actor, string $toStatus): void

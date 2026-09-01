@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\EvidenceCollections\Schemas;
 
+use App\Support\Tenancy\TenantQuery;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class EvidenceCollectionForm
 {
@@ -21,9 +23,35 @@ class EvidenceCollectionForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                    Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt')->searchable()->preload()->required(),
-                    Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi')->searchable()->preload()->helperText('Kosongkan untuk koleksi tingkat perguruan tinggi.'),
-                    Select::make('accreditation_id')->label('Kegiatan Akreditasi')->relationship('accreditation', 'title')->searchable()->preload(),
+                    Select::make('perguruan_tinggi_id')
+                        ->label('Perguruan Tinggi')
+                        ->relationship(
+                            'perguruanTinggi',
+                            'nama_pt',
+                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Select::make('program_studi_id')
+                        ->label('Program Studi')
+                        ->relationship(
+                            'programStudi',
+                            'nama_prodi',
+                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user())
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->helperText('Kosongkan untuk koleksi tingkat perguruan tinggi.'),
+                    Select::make('accreditation_id')
+                        ->label('Kegiatan Akreditasi')
+                        ->relationship(
+                            'accreditation',
+                            'title',
+                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forOptionalProgramStudi($query, auth()->user())
+                        )
+                        ->searchable()
+                        ->preload(),
                     TextInput::make('code')->label('Kode Koleksi')->required()->maxLength(100)->alphaDash(),
                     TextInput::make('name')->label('Nama Koleksi')->required()->maxLength(255),
                     Select::make('provider')->label('Penyedia Cloud')->options(['google_drive' => 'Google Drive', 'sharepoint' => 'SharePoint/OneDrive', 'dropbox' => 'Dropbox', 'institution_cloud' => 'Cloud Institusi'])->default('google_drive')->required(),

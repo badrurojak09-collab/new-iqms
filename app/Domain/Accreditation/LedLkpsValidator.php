@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Accreditation;
 
+use App\Models\Accreditation;
 use App\Models\AccreditationResponse;
 use App\Models\EvidenceLink;
 use App\Models\InstrumentMapping;
@@ -15,7 +16,7 @@ final class LedLkpsValidator
     /** @return array{valid:bool, errors:array<int, array<string, mixed>>, summary:array<string, int>} */
     public function validate(Accreditation $accreditation): array
     {
-        $accreditation->loadMissing(['sections', 'responses.section', 'responses.instrumentNode']);
+        $accreditation->loadMissing(['sections.instrumentNode', 'responses.section', 'responses.instrumentNode']);
         $errors = [];
         $requiredSections = $accreditation->sections->where('status', '!=', 'completed')->count();
         $responsesChecked = 0;
@@ -50,7 +51,7 @@ final class LedLkpsValidator
     {
         $versionId = (int) $accreditation->instrument_version_id;
         $errors = [];
-        $ledTemplates = LedTemplate::query()->where('instrument_version_id', $versionId)->with('sections')->get();
+        $ledTemplates = LedTemplate::query()->where('instrument_version_id', $versionId)->with('sections.instrumentNode')->get();
         foreach ($ledTemplates as $template) {
             foreach ($template->sections as $section) {
                 if ($section->instrumentNode?->instrument_version_id !== null && (int) $section->instrumentNode->instrument_version_id !== $versionId) {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\RtmMeetings;
+use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\RtmMeetings\Pages\CreateRtmMeeting;
 use App\Filament\Resources\RtmMeetings\Pages\EditRtmMeeting;
@@ -17,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class RtmMeetingResource extends Resource
@@ -28,6 +30,11 @@ class RtmMeetingResource extends Resource
     protected static ?string $navigationLabel = 'Rapat Tinjauan Manajemen';
     protected static ?string $modelLabel = 'Rapat Tinjauan Manajemen';
     protected static ?string $pluralModelLabel = 'Rapat Tinjauan Manajemen';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return TenantQuery::forOptionalProgramStudi(parent::getEloquentQuery(), auth()->user());
+    }
 
     public static function form(Schema $schema): Schema
     {

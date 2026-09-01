@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiChecklistItems\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\AmiCycle;
 use App\Models\InstrumentNode;
@@ -26,7 +28,7 @@ class AmiChecklistItemForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                    Select::make('ami_cycle_id')->label('Siklus AMI')->options(fn (): array => AmiCycle::query()->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())->searchable()->preload()->required(),
+                    Select::make('ami_cycle_id')->label('Siklus AMI')->options(fn (): array => TenantQuery::forOptionalProgramStudi(AmiCycle::query(), auth()->user())->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())->searchable()->preload()->required(),
                     TextInput::make('code')->label('Kode Checklist')->required()->maxLength(100),
                     Textarea::make('question')->label('Pertanyaan Audit')->required()->rows(5)->columnSpanFull(),
                     Select::make('instrument_node_id')->label('Elemen Instrumen')->options(fn (): array => InstrumentNode::query()->orderBy('code')->get()->mapWithKeys(fn (InstrumentNode $node): array => [$node->id => $node->code.' — '.$node->title])->all())->searchable()->preload(),

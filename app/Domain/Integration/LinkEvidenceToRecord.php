@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Integration;
 
+use App\Models\AmiChecklistItem;
 use App\Models\AmiFinding;
 use App\Models\Evidence;
 use App\Models\EvidenceLink;
@@ -15,6 +16,7 @@ final class LinkEvidenceToRecord
     /** @var list<string> */
     private const ALLOWED_TYPES = [
         'App\\Models\\AccreditationResponse',
+        'App\\Models\\AmiChecklistItem',
         'App\\Models\\AmiFinding',
         'App\\Models\\SpmiRealization',
         'App\\Models\\RtlAction',
@@ -28,7 +30,7 @@ final class LinkEvidenceToRecord
         }
 
         $recordTenantId = $record->getAttribute('perguruan_tinggi_id');
-        if ($recordTenantId === null && $record instanceof AmiFinding) {
+        if ($recordTenantId === null && ($record instanceof AmiFinding || $record instanceof AmiChecklistItem)) {
             $record->loadMissing('cycle');
             $recordTenantId = $record->cycle?->perguruan_tinggi_id;
         }

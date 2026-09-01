@@ -21,6 +21,18 @@ Route::get('/admin/document-output/{request}/download', [DocumentOutputControlle
     ->middleware('auth')
     ->name('document-output.download');
 
+Route::get('/admin/accreditations/{accreditation}/export/{type}', [\App\Http\Controllers\AccreditationExportController::class, 'export'])
+    ->middleware('auth')
+    ->name('accreditations.export');
+
+Route::get('/admin/rtm-meetings/{meeting}/export/minutes', [\App\Http\Controllers\QualityReportExportController::class, 'exportRtmMinutes'])
+    ->middleware('auth')
+    ->name('rtm-meetings.export-minutes');
+
+Route::get('/admin/ami-cycles/{cycle}/export/summary', [\App\Http\Controllers\QualityReportExportController::class, 'exportAmiSummary'])
+    ->middleware('auth')
+    ->name('ami-cycles.export-summary');
+
 Route::post('/admin/impersonate/stop', [ImpersonationController::class, 'stop'])
     ->middleware('auth')
     ->name('impersonation.stop');

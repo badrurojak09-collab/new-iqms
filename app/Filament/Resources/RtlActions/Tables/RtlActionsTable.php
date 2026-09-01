@@ -9,6 +9,8 @@ use App\Support\Ui\StatusLabel;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
@@ -16,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\TrashedFilter;
 
 class RtlActionsTable
 {
@@ -38,7 +41,10 @@ class RtlActionsTable
             ->filters([
                 SelectFilter::make('status')->label('Status RTL')->options(['open' => 'Terbuka', 'in_progress' => 'Sedang Berjalan', 'completed' => 'Selesai', 'verified' => 'Terverifikasi', 'closed' => 'Ditutup', 'cancelled' => 'Dibatalkan']),
             ])
+            ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
+                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
                 Action::make('start')->label('Mulai')->color('info')->visible(fn ($record): bool => auth()->user()?->can('manage rtl') && $record->status === 'open')->action(function ($record): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'in_progress');
                     Notification::make()->title('RTL dimulai.')->success()->send();

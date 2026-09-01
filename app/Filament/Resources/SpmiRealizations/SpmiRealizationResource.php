@@ -47,7 +47,10 @@ class SpmiRealizationResource extends Resource
 
     public static function getRelations(): array
     {
-        return [EvaluationsRelationManager::class];
+        return [
+            EvaluationsRelationManager::class,
+            \App\Filament\Resources\SpmiRealizations\RelationManagers\EvidenceLinksRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

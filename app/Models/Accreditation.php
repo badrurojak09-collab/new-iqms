@@ -82,4 +82,9 @@ class Accreditation extends Model
     {
         return $this->hasMany(AccreditationReadinessItem::class);
     }
+
+    public function readinessRuns(): HasMany
+    {
+        return $this->hasMany(ReadinessRun::class);
+    }
 }

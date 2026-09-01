@@ -44,6 +44,12 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
+            ->userMenuItems([
+                \Filament\Navigation\MenuItem::make()
+                    ->label('Profil Saya')
+                    ->url(fn(): string => \App\Filament\Pages\MyProfile::getUrl())
+                    ->icon('heroicon-o-user'),  // <-- Ganti di bagian ini
+            ])
             ->navigationGroups([
                 NavigationGroup::make('Organisasi & Tenant')
                     ->icon(Heroicon::OutlinedBuildingOffice2),

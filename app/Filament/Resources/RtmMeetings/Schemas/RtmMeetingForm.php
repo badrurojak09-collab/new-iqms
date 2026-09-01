@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\RtmMeetings\Schemas;
+use App\Support\Tenancy\TenantQuery;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\AmiCycle;
 use App\Models\PerguruanTinggi;
@@ -26,10 +28,10 @@ class RtmMeetingForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                    Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->options(fn (): array => PerguruanTinggi::query()->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())->searchable()->preload()->required(),
-                    Select::make('program_studi_id')->label('Program Studi')->options(fn (): array => ProgramStudi::query()->orderBy('nama_prodi')->pluck('nama_prodi', 'id')->all())->searchable()->preload()->helperText('Kosongkan jika rapat berlaku untuk tingkat perguruan tinggi.'),
-                    Select::make('ami_cycle_id')->label('Siklus AMI Terkait')->options(fn (): array => AmiCycle::query()->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())->searchable()->preload(),
-                    Select::make('chair_id')->label('Pimpinan Rapat')->options(fn (): array => User::query()->orderBy('name')->pluck('name', 'id')->all())->searchable()->preload(),
+                    Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->options(fn (): array => TenantQuery::forPerguruanTinggi(PerguruanTinggi::query(), auth()->user())->orderBy('nama_pt')->pluck('nama_pt', 'id')->all())->searchable()->preload()->required(),
+                    Select::make('program_studi_id')->label('Program Studi')->options(fn (): array => TenantQuery::forProgramStudi(ProgramStudi::query(), auth()->user())->orderBy('nama_prodi')->pluck('nama_prodi', 'id')->all())->searchable()->preload()->helperText('Kosongkan jika rapat berlaku untuk tingkat perguruan tinggi.'),
+                    Select::make('ami_cycle_id')->label('Siklus AMI Terkait')->options(fn (): array => TenantQuery::forOptionalProgramStudi(AmiCycle::query(), auth()->user())->latest('period_year')->get()->mapWithKeys(fn (AmiCycle $cycle): array => [$cycle->id => $cycle->code.' — '.$cycle->name.' — '.$cycle->period_year])->all())->searchable()->preload(),
+                    Select::make('chair_id')->label('Pimpinan Rapat')->options(fn (): array => User::query()->whereHas('tenantScopes')->orderBy('name')->pluck('name', 'id')->all())->searchable()->preload(),
                     TextInput::make('code')->label('Kode Rapat')->required()->maxLength(80),
                     TextInput::make('title')->label('Judul Rapat')->required()->maxLength(255),
                     DateTimePicker::make('held_at')->label('Waktu Pelaksanaan')->native(false),

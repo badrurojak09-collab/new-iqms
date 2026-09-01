@@ -14,6 +14,7 @@ use App\Models\Accreditation;
 use App\Models\ReadinessRun;
 use App\Support\Tenancy\TenantContext;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -161,7 +162,46 @@ class AccreditationResource extends Resource
                 ->icon(Heroicon::OutlinedCalculator)
                 ->requiresConfirmation()
                 ->visible(fn(): bool => auth()->user()?->isSuperAdmin() || auth()->user()?->can('manage accreditation') || auth()->user()?->can('review accreditation'))
-                ->action(fn(Accreditation $record): ReadinessRun => app(ReadinessScoringService::class)->calculate(auth()->user(), $record)),
+                ->action(function (Accreditation $record): void {
+                    $run = app(ReadinessScoringService::class)->calculate(auth()->user(), $record);
+                    Notification::make()
+                        ->title('Kesiapan berhasil dihitung')
+                        ->body("Skor Terbobot: {$run->weighted_score}% ({$run->ready_items}/{$run->total_items} item siap)")
+                        ->success()
+                        ->send();
+                }),
+            Action::make('exportDocuments')
+                ->label('Ekspor Dokumen')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->form([
+                    Select::make('document_type')
+                        ->label('Pilih Format Dokumen Luaran')
+                        ->options([
+                            '── Format Native (Siap Sunting) ──' => [
+                                'led-docx'  => '📝 Draf LED — Microsoft Word (.docx)',
+                                'lkps-xlsx' => '📊 Borang LKPS/LKPT — Microsoft Excel (.xlsx)',
+                            ],
+                            '── Format Web / Cetak (Preview PDF) ──' => [
+                                'led-html'             => '📄 Draf LED — HTML / Cetak / PDF',
+                                'lkps-html'            => '🖥️ Tabel LKPS/LKPT — HTML / Cetak',
+                                'score-simulation'     => '🏆 Matriks Simulasi Skor & Syarat Perlu',
+                                'evidence-matrix-html' => '📎 Peta Bukti — HTML / Cetak',
+                            ],
+                            '── Format Data (Impor / Integrasi) ──' => [
+                                'lkps-csv'             => '📥 Borang LKPS/LKPT — CSV',
+                                'evidence-matrix-csv'  => '📥 Peta Bukti — CSV',
+                            ],
+                        ])
+                        ->required()
+                        ->default('led-docx')
+                        ->selectablePlaceholder(false),
+                ])
+                ->action(function (Accreditation $record, array $data, $livewire): void {
+                    $type = $data['document_type'];
+                    $url = route('accreditations.export', ['accreditation' => $record->getKey(), 'type' => $type]);
+                    $livewire->js("window.open('{$url}', '_blank');");
+                }),
         ])->filters([
             SelectFilter::make('status')->label('Status')->options(['draft' => 'Draf', 'in_progress' => 'Sedang Berjalan', 'review' => 'Dalam Review', 'ready' => 'Siap Diajukan', 'submitted' => 'Sudah Diajukan', 'completed' => 'Selesai']),
             SelectFilter::make('scope_type')->options(['institution' => 'Institusi', 'program_studi' => 'Program Studi']),

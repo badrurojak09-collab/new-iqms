@@ -6,11 +6,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AmiChecklistItem extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'ami_checklist_items';
 
@@ -39,5 +40,10 @@ class AmiChecklistItem extends Model
     public function spmiIndicator(): BelongsTo
     {
         return $this->belongsTo(SpmiIndicator::class);
+    }
+
+    public function evidenceLinks(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(EvidenceLink::class, 'linkable');
     }
 }

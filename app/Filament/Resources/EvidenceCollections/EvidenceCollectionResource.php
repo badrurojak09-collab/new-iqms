@@ -9,6 +9,7 @@ use App\Filament\Resources\EvidenceCollections\RelationManagers\ItemsRelationMan
 use App\Filament\Resources\EvidenceCollections\Schemas\EvidenceCollectionForm;
 use App\Filament\Resources\EvidenceCollections\Tables\EvidenceCollectionsTable;
 use App\Models\EvidenceCollection;
+use App\Support\Tenancy\TenantQuery;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -33,13 +34,8 @@ class EvidenceCollectionResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()->with(['perguruanTinggi', 'programStudi'])->withCount('items');
-        $user = auth()->user();
-        if ($user === null || $user->isSuperAdmin()) {
-            return $user === null ? $query->whereRaw('1 = 0') : $query;
-        }
 
-        return $query->where('perguruan_tinggi_id', $user->perguruan_tinggi_id ?? 0)
-            ->when($user->programStudis()->exists(), fn (Builder $builder) => $builder->whereIn('program_studi_id', $user->programStudis()->pluck('program_studi.id')));
+        return TenantQuery::forOptionalProgramStudi($query, auth()->user());
     }
 
     public static function form(Schema $schema): Schema

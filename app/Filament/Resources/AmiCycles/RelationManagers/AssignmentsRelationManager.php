@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiCycles\RelationManagers;
 
+use Illuminate\Database\Eloquent\Builder;
+use App\Support\Tenancy\TenantQuery;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;

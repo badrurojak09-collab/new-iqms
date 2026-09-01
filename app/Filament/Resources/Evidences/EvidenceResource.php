@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Evidences;
 
+use App\Domain\Evidence\EvidenceCollectionService;
 use App\Domain\Evidence\StoreEvidenceLink;
 use App\Filament\Resources\Evidences\Pages\CreateEvidence;
 use App\Filament\Resources\Evidences\Pages\EditEvidence;
@@ -12,12 +13,14 @@ use App\Filament\Resources\Evidences\RelationManagers\EvidenceLinkChecksRelation
 use App\Filament\Resources\Evidences\RelationManagers\EvidenceReviewsRelationManager;
 use App\Models\Evidence;
 use App\Models\EvidenceReview;
+use App\Support\Tenancy\TenantQuery;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -46,17 +49,8 @@ class EvidenceResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()->with(['perguruanTinggi', 'programStudi', 'versions.document']);
-        $user = auth()->user();
-        if ($user === null || $user->isSuperAdmin()) {
-            return $user === null ? $query->whereRaw('1 = 0') : $query;
-        }
 
-        return $query->where(function (Builder $builder) use ($user): void {
-            $builder->where('perguruan_tinggi_id', $user->perguruan_tinggi_id ?? 0)
-                ->when($user->programStudis()->exists(), function (Builder $q) use ($user): void {
-                    $q->whereIn('program_studi_id', $user->programStudis()->pluck('program_studi.id'));
-                });
-        });
+        return TenantQuery::forOptionalProgramStudi($query, auth()->user());
     }
 
     public static function form(Schema $schema): Schema
@@ -68,14 +62,32 @@ class EvidenceResource extends Resource
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-            Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt')->searchable()->preload()->required(),
-            Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi')->searchable()->preload(),
-            TextInput::make('code')->label('Kode Evidence')->required()->maxLength(80)->alphaDash()->unique(ignoreRecord: true),
-            TextInput::make('title')->label('Judul')->required()->maxLength(255),
-            Textarea::make('description')->columnSpanFull(),
-            DatePicker::make('valid_from'),
-            DatePicker::make('valid_until')->afterOrEqual('valid_from'),
-            Select::make('status')->label('Status Evidence')->options(['draft' => 'Draf', 'submitted' => 'Dikirim', 'verified' => 'Terverifikasi', 'archived' => 'Diarsipkan'])->default('draft')->required(),
+                    Select::make('perguruan_tinggi_id')
+                        ->label('Perguruan Tinggi')
+                        ->relationship(
+                            'perguruanTinggi',
+                            'nama_pt',
+                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Select::make('program_studi_id')
+                        ->label('Program Studi')
+                        ->relationship(
+                            'programStudi',
+                            'nama_prodi',
+                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user())
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->helperText('Kosongkan jika evidence berlaku di tingkat institusi.'),
+                    TextInput::make('code')->label('Kode Evidence')->required()->maxLength(80)->alphaDash()->unique(ignoreRecord: true),
+                    TextInput::make('title')->label('Judul')->required()->maxLength(255),
+                    Textarea::make('description')->columnSpanFull(),
+                    DatePicker::make('valid_from'),
+                    DatePicker::make('valid_until')->afterOrEqual('valid_from'),
+                    Select::make('status')->label('Status Evidence')->options(['draft' => 'Draf', 'submitted' => 'Dikirim', 'verified' => 'Terverifikasi', 'archived' => 'Diarsipkan'])->default('draft')->required(),
                 ]),
         ]);
     }
@@ -109,6 +121,21 @@ class EvidenceResource extends Resource
             ])->action(function (Evidence $record, array $data): void {
                 app(StoreEvidenceLink::class)->handle(auth()->user(), $record, $data['external_url'], $data);
             }),
+            Action::make('checkLink')
+                ->label('Periksa Tautan')
+                ->icon(Heroicon::OutlinedLink)
+                ->color('info')
+                ->requiresConfirmation()
+                ->modalHeading('Periksa Keterjangkauan Tautan Cloud')
+                ->modalDescription('Sistem akan mengirimkan permintaan verifikasi ke tautan cloud eksternal dan mencatat hasilnya ke riwayat pemeriksaan.')
+                ->action(function (Evidence $record): void {
+                    $check = app(EvidenceCollectionService::class)->checkLatestLink(auth()->user(), $record);
+                    Notification::make()
+                        ->title('Pemeriksaan Tautan Selesai')
+                        ->body(sprintf('Status: %s (HTTP %s)', $check->status, $check->http_status ?? '—'))
+                        ->success()
+                        ->send();
+                }),
             Action::make('review')
                 ->label('Review Evidence Cloud')
                 ->icon(Heroicon::OutlinedClipboardDocumentCheck)

@@ -8,11 +8,14 @@ use App\Domain\Ami\AmiCycleLifecycleService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\TrashedFilter;
 
 class AmiCyclesTable
 {
@@ -39,7 +42,10 @@ class AmiCyclesTable
                     default => 'info',
                 }),
             ])
+            ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
+                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
                 Action::make('start')->label('Mulai Audit')->color('warning')->requiresConfirmation()->visible(fn ($record): bool => $record->status === 'draft' && auth()->user()?->can('manage ami'))->action(function ($record): void {
                     app(AmiCycleLifecycleService::class)->start($record, auth()->user());
                     Notification::make()->title('Siklus AMI dimulai.')->success()->send();
@@ -52,6 +58,12 @@ class AmiCyclesTable
                     app(AmiCycleLifecycleService::class)->close($record, auth()->user());
                     Notification::make()->title('Siklus AMI ditutup.')->success()->send();
                 }),
+                Action::make('exportSummary')
+                    ->label('Cetak Laporan')
+                    ->icon('heroicon-o-printer')
+                    ->color('info')
+                    ->url(fn ($record): string => route('ami-cycles.export-summary', ['cycle' => $record->getKey()]))
+                    ->openUrlInNewTab(),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
