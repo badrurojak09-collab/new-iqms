@@ -165,9 +165,9 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
@@ -182,6 +182,24 @@
         }
         .iqms-btn-primary:hover {
             background: #0369a1;
+            color: #ffffff;
+        }
+        .iqms-btn-success {
+            background: #16a34a;
+            color: #ffffff;
+            border-color: #16a34a;
+        }
+        .iqms-btn-success:hover {
+            background: #15803d;
+            color: #ffffff;
+        }
+        .iqms-btn-warning {
+            background: #d97706;
+            color: #ffffff;
+            border-color: #d97706;
+        }
+        .iqms-btn-warning:hover {
+            background: #b45309;
             color: #ffffff;
         }
         .iqms-btn-secondary {
@@ -200,6 +218,46 @@
         }
         :is(.dark) .iqms-btn-secondary:hover {
             background: #374151;
+        }
+
+        /* ── Workspace Main Tabs ── */
+        .iqms-main-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        :is(.dark) .iqms-main-tabs {
+            border-color: #1f2937;
+        }
+        .iqms-main-tab-btn {
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .iqms-main-tab-btn:hover {
+            color: #0284c7;
+        }
+        .iqms-main-tab-btn.is-active {
+            color: #0284c7;
+            border-bottom-color: #0284c7;
+        }
+        :is(.dark) .iqms-main-tab-btn {
+            color: #94a3b8;
+        }
+        :is(.dark) .iqms-main-tab-btn.is-active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
         }
 
         /* ── Filter Tabs ── */
@@ -317,6 +375,63 @@
             background: #1e293b;
         }
 
+        /* ── LKPS Editable Data Grid ── */
+        .iqms-grid-input {
+            width: 100%;
+            min-width: 120px;
+            padding: 6px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 12px;
+            background: #ffffff;
+            color: #0f172a;
+            transition: all 0.15s;
+        }
+        .iqms-grid-input:focus {
+            outline: none;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+            background: #f0f9ff;
+        }
+        .iqms-grid-input.has-error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        :is(.dark) .iqms-grid-input {
+            background: #1f2937;
+            border-color: #374151;
+            color: #f1f5f9;
+        }
+
+        /* ── Modal Overlay ── */
+        .iqms-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .iqms-modal-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            max-width: 750px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+            padding: 24px;
+        }
+        :is(.dark) .iqms-modal-content {
+            background: #111827;
+            border-color: #1f2937;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
         /* ── Dropdown ── */
         .iqms-dropdown-menu {
             position: absolute;
@@ -398,19 +513,22 @@
                 </div>
             </div>
 
-            {{-- Card 3: Bukti Tertaut --}}
+            {{-- Card 3: Kemajuan LKPS --}}
             <div class="iqms-card">
                 <div class="iqms-metric-header">
                     <div>
-                        <div class="iqms-metric-title">Bukti Tertaut</div>
-                        <div class="iqms-metric-value">{{ $evidenceLinksCount }}</div>
+                        <div class="iqms-metric-title">Kemajuan Tabel LKPS</div>
+                        <div class="iqms-metric-value">{{ number_format($lkpsProgress, 1) }}%</div>
                     </div>
                     <div class="iqms-metric-icon" style="background: #f3e8ff; color: #9333ea;">
-                        📎
+                        📊
                     </div>
                 </div>
+                <div class="iqms-progress-bg">
+                    <div class="iqms-progress-fill" style="width: {{ $lkpsProgress }}%; background: #9333ea;"></div>
+                </div>
                 <div style="font-size: 11px; color: #64748b; margin-top: 6px;">
-                    <strong style="color: #16a34a;">{{ $verifiedEvidenceCount }}</strong> terverifikasi dari {{ $evidenceLinksCount }} tautan
+                    {{ $lkpsTemplates->count() }} tabel instrumen aktif
                 </div>
             </div>
 
@@ -424,7 +542,7 @@
                         </div>
                     </div>
                     <div class="iqms-metric-icon" style="background: #fef3c7; color: #d97706;">
-                        📊
+                        🎯
                     </div>
                 </div>
                 <div style="font-size: 11px; color: #64748b; margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
@@ -442,7 +560,7 @@
         <div class="iqms-card">
             <div style="margin-bottom: 16px;">
                 <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 4px 0;">Pilih Kegiatan Akreditasi</h3>
-                <p style="font-size: 12px; color: #64748b; margin: 0;">Pilih paket akreditasi aktif untuk memantau butir LKE, narasi LED, kelengkapan bukti, dan ekspor dokumen.</p>
+                <p style="font-size: 12px; color: #64748b; margin: 0;">Pilih paket akreditasi aktif untuk memantau butir LKE, narasi LED, kelengkapan bukti, tabel data LKPS, dan ekspor dokumen.</p>
             </div>
 
             <div class="iqms-grid-3">
@@ -531,7 +649,7 @@
                             href="{{ \App\Filament\Resources\Accreditations\AccreditationResource::getUrl('edit', ['record' => $selectedAccreditation]) }}"
                             class="iqms-btn iqms-btn-primary"
                         >
-                            ✏️ Buka Form Pengisian & Review
+                            ✏️ Buka Form & Review
                         </a>
 
                         <button
@@ -586,156 +704,855 @@
                     </div>
                 </div>
 
-                {{-- Filter & Search Toolbar --}}
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px;">
-                    {{-- Status Tabs --}}
-                    <div class="iqms-tabs">
-                        @php
-                            $statuses = [
-                                'all' => 'Semua (' . $responseCount . ')',
-                                'approved' => 'Disetujui (' . $completedResponseCount . ')',
-                                'in_review' => 'Dalam Review (' . $inReviewCount . ')',
-                                'draft' => 'Draf / Revisi (' . $draftCount . ')',
-                            ];
-                        @endphp
-                        @foreach ($statuses as $stKey => $stLabel)
-                            <button
-                                type="button"
-                                wire:click="filterByStatus('{{ $stKey }}')"
-                                class="iqms-tab-btn {{ $selectedStatus === $stKey ? 'is-active' : '' }}"
-                            >
-                                {{ $stLabel }}
-                            </button>
-                        @endforeach
-                    </div>
-
-                    {{-- Search Input --}}
-                    <div class="iqms-search-box">
-                        <span style="position: absolute; left: 10px; top: 7px; color: #94a3b8; font-size: 12px;">🔍</span>
-                        <input
-                            type="text"
-                            wire:model.live.debounce.300ms="search"
-                            placeholder="Cari butir atau kriteria..."
-                            class="iqms-search-input"
-                        />
-                    </div>
+                {{-- Workspace Main Tabs Switcher --}}
+                <div class="iqms-main-tabs">
+                    <button
+                        type="button"
+                        wire:click="setWorkspaceTab('led')"
+                        class="iqms-main-tab-btn {{ $activeWorkspaceTab === 'led' ? 'is-active' : '' }}"
+                    >
+                        📝 Butir & Narasi LED
+                        <span class="iqms-badge {{ $activeWorkspaceTab === 'led' ? 'iqms-badge-blue' : 'iqms-badge-gray' }}">{{ $responseCount }}</span>
+                    </button>
+                    <button
+                        type="button"
+                        wire:click="setWorkspaceTab('lkps')"
+                        class="iqms-main-tab-btn {{ $activeWorkspaceTab === 'lkps' ? 'is-active' : '' }}"
+                    >
+                        📊 Borang & Tabel LKPS
+                        <span class="iqms-badge {{ $activeWorkspaceTab === 'lkps' ? 'iqms-badge-purple' : 'iqms-badge-gray' }}">{{ $lkpsTemplates->count() }}</span>
+                    </button>
                 </div>
 
-                {{-- Criteria Filter Pills --}}
-                @if ($sections->isNotEmpty())
-                    <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-                        <span style="font-size: 11px; font-weight: 600; color: #64748b; margin-right: 4px;">Kriteria:</span>
-                        <button
-                            type="button"
-                            wire:click="filterBySection(null)"
-                            class="iqms-tab-btn {{ $selectedSectionId === null ? 'is-active' : '' }}"
-                            style="padding: 3px 8px; font-size: 11px;"
-                        >
-                            Semua
-                        </button>
-                        @foreach ($sections as $sec)
+                {{-- ── TAB 1: Butir & Narasi LED ──────────────────────── --}}
+                @if ($activeWorkspaceTab === 'led')
+                    {{-- Filter & Search Toolbar --}}
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        {{-- Status Tabs --}}
+                        <div class="iqms-tabs">
+                            @php
+                                $statuses = [
+                                    'all' => 'Semua (' . $responseCount . ')',
+                                    'approved' => 'Disetujui (' . $completedResponseCount . ')',
+                                    'in_review' => 'Dalam Review (' . $inReviewCount . ')',
+                                    'draft' => 'Draf / Revisi (' . $draftCount . ')',
+                                ];
+                            @endphp
+                            @foreach ($statuses as $stKey => $stLabel)
+                                <button
+                                    type="button"
+                                    wire:click="filterByStatus('{{ $stKey }}')"
+                                    class="iqms-tab-btn {{ $selectedStatus === $stKey ? 'is-active' : '' }}"
+                                >
+                                    {{ $stLabel }}
+                                </button>
+                            @endforeach
+                        </div>
+
+                        {{-- Search Input --}}
+                        <div class="iqms-search-box">
+                            <span style="position: absolute; left: 10px; top: 7px; color: #94a3b8; font-size: 12px;">🔍</span>
+                            <input
+                                type="text"
+                                wire:model.live.debounce.300ms="search"
+                                placeholder="Cari butir atau kriteria..."
+                                class="iqms-search-input"
+                            />
+                        </div>
+                    </div>
+
+                    {{-- Criteria Filter Pills --}}
+                    @if ($sections->isNotEmpty())
+                        <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding-top: 8px; border-top: 1px solid #f1f5f9;">
+                            <span style="font-size: 11px; font-weight: 600; color: #64748b; margin-right: 4px;">Kriteria:</span>
                             <button
                                 type="button"
-                                wire:click="filterBySection({{ $sec->getKey() }})"
-                                class="iqms-tab-btn {{ $selectedSectionId === $sec->getKey() ? 'is-active' : '' }}"
+                                wire:click="filterBySection(null)"
+                                class="iqms-tab-btn {{ $selectedSectionId === null ? 'is-active' : '' }}"
                                 style="padding: 3px 8px; font-size: 11px;"
                             >
-                                {{ $sec->title }}
+                                Semua
                             </button>
-                        @endforeach
+                            @foreach ($sections as $sec)
+                                <button
+                                    type="button"
+                                    wire:click="filterBySection({{ $sec->getKey() }})"
+                                    class="iqms-tab-btn {{ $selectedSectionId === $sec->getKey() ? 'is-active' : '' }}"
+                                    style="padding: 3px 8px; font-size: 11px;"
+                                >
+                                    {{ $sec->title }}
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    {{-- LED Data Table with Response Workflow Actions --}}
+                    <div class="iqms-table-wrap">
+                        <table class="iqms-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 110px;">Butir</th>
+                                    <th style="width: 160px;">Kriteria / Bagian</th>
+                                    <th>Narasi & Catatan Telaah</th>
+                                    <th style="width: 140px;">Bukti & Sitasi</th>
+                                    <th style="width: 110px;">Status</th>
+                                    <th style="width: 220px; text-align: right;">Aksi Alur Kerja</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($filteredResponses as $response)
+                                    @php
+                                        $evCount = $response->evidenceLinks->count();
+                                        $verCount = $response->evidenceLinks->where('evidence.status', 'verified')->count();
+                                        $isLocked = $response->isLocked();
+                                        $status = $response->status;
+                                    @endphp
+                                    <tr>
+                                        {{-- Kunci Butir --}}
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                                <span class="iqms-badge iqms-badge-gray" style="font-family: monospace; font-weight: 700;">
+                                                    {{ $response->response_key }}
+                                                </span>
+                                                @if ($isLocked)
+                                                    <span style="font-size: 12px;" title="Butir Terkunci">🔒</span>
+                                                @endif
+                                            </div>
+                                            <button
+                                                type="button"
+                                                wire:click="openRevisionHistoryModal({{ $response->getKey() }})"
+                                                style="background: none; border: none; padding: 0; font-size: 10px; color: #0284c7; margin-top: 4px; cursor: pointer; text-decoration: underline;"
+                                            >
+                                                Rev #{{ $response->revision_no ?: 1 }} (Riwayat 📜)
+                                            </button>
+                                        </td>
+
+                                        {{-- Bagian / Kriteria --}}
+                                        <td style="font-weight: 600; color: #0f172a;">
+                                            {{ $response->section?->title ?: '—' }}
+                                        </td>
+
+                                        {{-- Narasi & Review Notes Preview --}}
+                                        <td style="max-width: 300px; line-height: 1.4;">
+                                            @if (filled($response->response_text))
+                                                <div style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #334155;">
+                                                    {{ $response->response_text }}
+                                                </div>
+                                            @else
+                                                <span style="font-style: italic; color: #94a3b8;">Belum ada narasi respons LED.</span>
+                                            @endif
+
+                                            {{-- Review Notes Callout --}}
+                                            @if (filled($response->review_notes))
+                                                <div style="margin-top: 6px; padding: 6px 8px; background: #fffbeb; border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 10px; color: #92400e;">
+                                                    <strong>Catatan Reviewer:</strong> {{ $response->review_notes }}
+                                                </div>
+                                            @endif
+                                        </td>
+
+                                        {{-- Evidence & Citation Link --}}
+                                        <td>
+                                            <button
+                                                type="button"
+                                                wire:click="openEvidenceLinkModal({{ $response->getKey() }})"
+                                                class="iqms-badge {{ $evCount > 0 ? 'iqms-badge-blue' : 'iqms-badge-gray' }}"
+                                                style="cursor: pointer; text-decoration: none;"
+                                                title="Kelola sitasi bukti untuk butir ini"
+                                            >
+                                                📎 {{ $evCount }} Bukti ({{ $verCount }} Verif) ▾
+                                            </button>
+                                        </td>
+
+                                        {{-- Status --}}
+                                        <td>
+                                            <span class="iqms-badge {{ match($status) {
+                                                'approved' => 'iqms-badge-green',
+                                                'locked' => 'iqms-badge-purple',
+                                                'in_review', 'review' => 'iqms-badge-blue',
+                                                'submitted' => 'iqms-badge-amber',
+                                                'revision_required', 'rejected' => 'iqms-badge-red',
+                                                default => 'iqms-badge-gray'
+                                            } }}">
+                                                {{ \App\Support\Ui\StatusLabel::for($status) }}
+                                            </span>
+                                        </td>
+
+                                        {{-- Workflow Actions --}}
+                                        <td style="text-align: right;">
+                                            <div style="display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap;">
+                                                {{-- Edit Narrative Action --}}
+                                                @if (! $isLocked && ! in_array($status, ['submitted', 'in_review', 'approved']))
+                                                    <button
+                                                        type="button"
+                                                        wire:click="openEditResponseModal({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-primary"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Sunting narasi butir ini"
+                                                    >
+                                                        ✏️ Sunting
+                                                    </button>
+                                                @endif
+
+                                                {{-- Submit Action (Author -> Reviewer) --}}
+                                                @if (in_array($status, ['draft', 'revision_required', 'rejected']) && ! $isLocked)
+                                                    <button
+                                                        type="button"
+                                                        wire:click="submitResponse({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-success"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Ajukan butir untuk ditinjau"
+                                                    >
+                                                        📤 Ajukan
+                                                    </button>
+                                                @endif
+
+                                                {{-- Start Review Action (Reviewer) --}}
+                                                @if ($status === 'submitted')
+                                                    <button
+                                                        type="button"
+                                                        wire:click="startReviewResponse({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-primary"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Mulai proses telaah / review"
+                                                    >
+                                                        🔍 Review
+                                                    </button>
+                                                @endif
+
+                                                {{-- Review in-progress actions --}}
+                                                @if ($status === 'in_review')
+                                                    <button
+                                                        type="button"
+                                                        wire:click="openRevisionModal({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-warning"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Minta perbaikan narasi/bukti"
+                                                    >
+                                                        ⚠️ Revisi
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        wire:click="approveResponse({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-success"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Setujui butir narasi ini"
+                                                    >
+                                                        ✅ Setujui
+                                                    </button>
+                                                @endif
+
+                                                {{-- Lock Action (Approver) --}}
+                                                @if ($status === 'approved' && ! $isLocked)
+                                                    <button
+                                                        type="button"
+                                                        wire:click="lockResponse({{ $response->getKey() }})"
+                                                        class="iqms-btn iqms-btn-secondary"
+                                                        style="padding: 4px 8px; font-size: 10px;"
+                                                        title="Kunci butir secara resmi"
+                                                    >
+                                                        🔒 Kunci
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" style="padding: 24px; text-align: center; color: #94a3b8;">
+                                            Tidak ada butir LKE/LED yang sesuai dengan filter.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 @endif
 
-                {{-- Data Table --}}
-                <div class="iqms-table-wrap">
-                    <table class="iqms-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 110px;">Butir</th>
-                                <th style="width: 180px;">Kriteria / Bagian</th>
-                                <th>Ringkasan Narasi LED</th>
-                                <th style="width: 130px;">Bukti</th>
-                                <th style="width: 100px;">Status</th>
-                                <th style="width: 80px; text-align: right;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($filteredResponses as $response)
+                {{-- ── TAB 2: Borang & Tabel LKPS ─────────────────────── --}}
+                @if ($activeWorkspaceTab === 'lkps')
+                    @if ($lkpsTemplates->isEmpty())
+                        <div style="padding: 40px; text-align: center; color: #64748b; border: 1px dashed #cbd5e1; border-radius: 12px;">
+                            <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
+                            <div style="font-weight: 700; font-size: 14px;">Belum ada Template LKPS terdaftar</div>
+                            <div style="font-size: 12px; margin-top: 4px;">Versi instrumen akreditasi ini belum memiliki konfigurasi tabel LKPS.</div>
+                        </div>
+                    @else
+                        {{-- LKPS Table Selector Tabs --}}
+                        <div class="iqms-tabs" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                            @foreach ($lkpsTemplates as $tpl)
                                 @php
-                                    $evCount = $response->evidenceLinks->count();
-                                    $verCount = $response->evidenceLinks->where('evidence.status', 'verified')->count();
+                                    $ds = $tpl->datasets->first();
+                                    $isFilled = $ds && ! empty($ds->rows_data) && empty($ds->validation_errors);
+                                    $isSel = $selectedLkpsTemplateId === $tpl->getKey();
                                 @endphp
-                                <tr>
-                                    {{-- Kunci Butir --}}
-                                    <td>
-                                        <span class="iqms-badge iqms-badge-gray" style="font-family: monospace; font-weight: 700;">
-                                            {{ $response->response_key }}
-                                        </span>
-                                        <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">
-                                            Rev #{{ $response->revision_no ?: 1 }}
+                                <button
+                                    type="button"
+                                    wire:click="selectLkpsTemplate({{ $tpl->getKey() }})"
+                                    class="iqms-tab-btn {{ $isSel ? 'is-active' : '' }}"
+                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;"
+                                >
+                                    <span>{{ $tpl->code }}</span>
+                                    @if ($isFilled)
+                                        <span style="font-size: 10px;">✅</span>
+                                    @elseif ($ds && ! empty($ds->validation_errors))
+                                        <span style="font-size: 10px;">⚠️</span>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+
+                        {{-- Current LKPS Table Info & Toolbar --}}
+                        @if ($selectedLkpsTemplate)
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <h3 style="font-size: 14px; font-weight: 700; margin: 0;">{{ $selectedLkpsTemplate->name }}</h3>
+                                        <span class="iqms-badge iqms-badge-gray" style="font-family: monospace;">{{ $selectedLkpsTemplate->code }}</span>
+                                        @if ($selectedLkpsTemplate->is_required)
+                                            <span class="iqms-badge iqms-badge-red">Wajib</span>
+                                        @endif
+                                    </div>
+                                    @if ($selectedLkpsTemplate->description)
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">{{ $selectedLkpsTemplate->description }}</div>
+                                    @endif
+                                </div>
+
+                                {{-- Action Toolbar --}}
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                                    <button
+                                        type="button"
+                                        wire:click="addLkpsRow"
+                                        class="iqms-btn iqms-btn-secondary"
+                                    >
+                                        ➕ Tambah Baris
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        wire:click="openImportModal"
+                                        class="iqms-btn iqms-btn-secondary"
+                                    >
+                                        📥 Import Spreadsheet
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        wire:click="exportLkpsTemplateCsv"
+                                        class="iqms-btn iqms-btn-secondary"
+                                        title="Unduh format template CSV kosong"
+                                    >
+                                        📄 Format CSV
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        wire:click="saveLkpsDataset"
+                                        class="iqms-btn iqms-btn-success"
+                                    >
+                                        💾 Simpan Perubahan
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Validation Errors Summary Alert --}}
+                            @if (! empty($lkpsErrors))
+                                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #b91c1c; display: flex; align-items: center; gap: 8px;">
+                                    <span>⚠️</span>
+                                    <span>Terdapat <strong>{{ count($lkpsErrors) }}</strong> baris yang memiliki catatan validasi atau kolom wajib yang belum diisi.</span>
+                                </div>
+                            @endif
+
+                            {{-- Editable Data Grid --}}
+                            <div class="iqms-table-wrap">
+                                <table class="iqms-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 45px; text-align: center;">#</th>
+                                            @foreach ($selectedLkpsTemplate->columns->sortBy('sort_order') as $col)
+                                                <th>
+                                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                                        <span>{{ $col->label }}</span>
+                                                        @if ($col->is_required)
+                                                            <span style="color: #ef4444;">*</span>
+                                                        @endif
+                                                    </div>
+                                                    @if ($col->unit)
+                                                        <div style="font-size: 9px; font-weight: normal; color: #94a3b8; text-transform: none;">({{ $col->unit }})</div>
+                                                    @endif
+                                                </th>
+                                            @endforeach
+                                            <th style="width: 50px; text-align: center;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($lkpsRows as $rowIndex => $row)
+                                            <tr>
+                                                <td style="text-align: center; font-weight: 600; color: #64748b; vertical-align: middle;">
+                                                    {{ $rowIndex + 1 }}
+                                                </td>
+
+                                                @foreach ($selectedLkpsTemplate->columns->sortBy('sort_order') as $col)
+                                                    @php
+                                                        $colKey = $col->column_key;
+                                                        $cellError = $lkpsErrors[$rowIndex][$colKey] ?? null;
+                                                        $isNumeric = in_array($col->data_type, ['integer', 'decimal', 'number', 'percent', 'ratio'], true);
+                                                    @endphp
+                                                    <td style="vertical-align: middle;">
+                                                        @if (! empty($col->allowed_values) && is_array($col->allowed_values))
+                                                            <select
+                                                                wire:model="lkpsRows.{{ $rowIndex }}.{{ $colKey }}"
+                                                                class="iqms-grid-input {{ $cellError ? 'has-error' : '' }}"
+                                                            >
+                                                                <option value="">-- Pilih --</option>
+                                                                @foreach ($col->allowed_values as $opt)
+                                                                    <option value="{{ $opt }}">{{ $opt }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <input
+                                                                type="{{ $isNumeric ? 'number' : 'text' }}"
+                                                                @if ($col->data_type === 'decimal' || $col->data_type === 'ratio' || $col->data_type === 'percent') step="any" @endif
+                                                                wire:model="lkpsRows.{{ $rowIndex }}.{{ $colKey }}"
+                                                                placeholder="{{ $col->label }}"
+                                                                class="iqms-grid-input {{ $cellError ? 'has-error' : '' }}"
+                                                                style="{{ $isNumeric ? 'text-align: right;' : '' }}"
+                                                            />
+                                                        @endif
+
+                                                        @if ($cellError)
+                                                            <div style="font-size: 10px; color: #ef4444; margin-top: 2px;">{{ $cellError }}</div>
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+
+                                                <td style="text-align: center; vertical-align: middle;">
+                                                    <button
+                                                        type="button"
+                                                        wire:click="removeLkpsRow({{ $rowIndex }})"
+                                                        style="background: none; border: none; cursor: pointer; color: #ef4444; font-size: 14px; padding: 4px;"
+                                                        title="Hapus baris ini"
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="{{ $selectedLkpsTemplate->columns->count() + 2 }}" style="padding: 24px; text-align: center; color: #94a3b8;">
+                                                    Belum ada baris data. Klik <strong>"➕ Tambah Baris"</strong> atau <strong>"📥 Import Spreadsheet"</strong> untuk mulai mengisi data.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+
+                                    {{-- Calculated Column Totals Footer --}}
+                                    @if (! empty($lkpsSummary['column_totals']))
+                                        <tfoot>
+                                            <tr style="background: #f8fafc; font-weight: 700; border-top: 2px solid #e2e8f0;">
+                                                <td style="text-align: center;">∑</td>
+                                                @foreach ($selectedLkpsTemplate->columns->sortBy('sort_order') as $col)
+                                                    @php
+                                                        $total = $lkpsSummary['column_totals'][$col->column_key] ?? null;
+                                                    @endphp
+                                                    <td style="{{ in_array($col->data_type, ['integer', 'decimal', 'number', 'percent', 'ratio']) ? 'text-align: right;' : '' }}">
+                                                        @if ($total !== null)
+                                                            {{ $col->data_type === 'integer' ? number_format($total) : number_format($total, $col->decimal_scale ?: 2) }}
+                                                            @if ($col->unit) <span style="font-size: 10px; font-weight: normal; color: #64748b;">{{ $col->unit }}</span> @endif
+                                                        @else
+                                                            —
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    @endif
+                                </table>
+                            </div>
+
+                            {{-- Grid Quick Summary --}}
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11px; color: #64748b;">
+                                <div>
+                                    Total <strong>{{ count($lkpsRows) }}</strong> baris data pada tabel ini.
+                                </div>
+                                <div>
+                                    <button
+                                        type="button"
+                                        wire:click="saveLkpsDataset"
+                                        class="iqms-btn iqms-btn-success"
+                                        style="padding: 6px 12px;"
+                                    >
+                                        💾 Simpan & Validasi
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                @endif
+            </div>
+        @endif
+
+        {{-- ── 4. Modal: Edit Narasi LED ────────────────────────────── --}}
+        @if ($showEditResponseModal)
+            <div class="iqms-modal-backdrop" wire:click.self="closeEditResponseModal">
+                <div class="iqms-modal-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span class="iqms-badge iqms-badge-blue" style="font-family: monospace;">{{ $editingResponseKey }}</span>
+                                <h3 style="font-size: 15px; font-weight: 700; margin: 0;">{{ $editingResponseTitle }}</h3>
+                            </div>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                Status: <strong>{{ strtoupper($editingResponseStatus) }}</strong> • Revisi aktif: <strong>Rev #{{ $editingRevisionNo }}</strong>
+                            </div>
+                        </div>
+                        <button type="button" wire:click="closeEditResponseModal" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
+                    </div>
+
+                    {{-- Guidance / Requirement Panel --}}
+                    @if (filled($editingResponseRequirement) || filled($editingResponseGuidance))
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 11px; color: #475569; line-height: 1.5;">
+                            @if (filled($editingResponseRequirement))
+                                <div style="margin-bottom: 6px;"><strong>Syarat / Kebutuhan:</strong> {{ $editingResponseRequirement }}</div>
+                            @endif
+                            @if (filled($editingResponseGuidance))
+                                <div><strong>Panduan Pengisian:</strong> {{ $editingResponseGuidance }}</div>
+                            @endif
+                        </div>
+                    @endif
+
+                    {{-- Narrative Textarea Editor --}}
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label style="font-size: 12px; font-weight: 700;">Narasi Respons LED</label>
+                            <span style="font-size: 11px; color: #94a3b8;">{{ strlen($editingResponseText) }} karakter</span>
+                        </div>
+                        <textarea
+                            wire:model="editingResponseText"
+                            rows="8"
+                            placeholder="Tuliskan narasi penjelasan capaian standar, siklus PPEPP, analisis evaluasi diri, dan tindak lanjut..."
+                            style="width: 100%; font-size: 12px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; line-height: 1.5; outline: none; background: #ffffff; color: #0f172a;"
+                        ></textarea>
+                    </div>
+
+                    {{-- Modal Footer Actions --}}
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+                        <button
+                            type="button"
+                            wire:click="closeEditResponseModal"
+                            class="iqms-btn iqms-btn-secondary"
+                        >
+                            Tutup
+                        </button>
+                        <button
+                            type="button"
+                            wire:click="saveResponseNarrative"
+                            class="iqms-btn iqms-btn-success"
+                        >
+                            💾 Simpan Perubahan Narasi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- ── 5. Modal: Minta Catatan Revisi ────────────────────────── --}}
+        @if ($showRevisionModal)
+            <div class="iqms-modal-backdrop" wire:click.self="closeRevisionModal">
+                <div class="iqms-modal-content" style="max-width: 550px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 15px; font-weight: 700; margin: 0; color: #b45309;">⚠️ Permintaan Revisi: {{ $revisionResponseKey }}</h3>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Tuliskan catatan perbaikan atau bukti tambahan yang diperlukan</div>
+                        </div>
+                        <button type="button" wire:click="closeRevisionModal" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Catatan / Alasan Revisi <span style="color: #ef4444;">*</span></label>
+                        <textarea
+                            wire:model="revisionNotes"
+                            rows="4"
+                            placeholder="Contoh: Narasi pada poin analisis belum menjelaskan tindak lanjut hasil AMI tahun 2025. Mohon lampirkan dokumen notula RTM..."
+                            style="width: 100%; font-size: 12px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; line-height: 1.4; outline: none; background: #ffffff; color: #0f172a;"
+                        ></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+                        <button
+                            type="button"
+                            wire:click="closeRevisionModal"
+                            class="iqms-btn iqms-btn-secondary"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="button"
+                            wire:click="submitRevisionRequest"
+                            class="iqms-btn iqms-btn-warning"
+                        >
+                            ⚠️ Kirim Permintaan Revisi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- ── 6. Modal: Riwayat Versi & Audit Trail ────────────────── --}}
+        @if ($showHistoryModal)
+            <div class="iqms-modal-backdrop" wire:click.self="closeRevisionHistoryModal">
+                <div class="iqms-modal-content" style="max-width: 650px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 15px; font-weight: 700; margin: 0;">📜 Riwayat Versi: {{ $historyResponseKey }}</h3>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Jejak audit seluruh perubahan narasi dan status butir</div>
+                        </div>
+                        <button type="button" wire:click="closeRevisionHistoryModal" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px; max-height: 450px; overflow-y: auto; padding-right: 4px;">
+                        @forelse ($historyRevisions as $rev)
+                            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; background: #f8fafc;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span class="iqms-badge iqms-badge-blue" style="font-weight: 700;">Rev #{{ $rev['revision_no'] }}</span>
+                                        <span class="iqms-badge iqms-badge-gray">{{ strtoupper((string) $rev['status']) }}</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b;">
+                                        👤 {{ $rev['changed_by_name'] }} • 📅 {{ $rev['changed_at'] }}
+                                    </div>
+                                </div>
+                                @if (filled($rev['change_reason']))
+                                    <div style="font-size: 11px; color: #b45309; margin-bottom: 6px; font-style: italic;">
+                                        Catatan: "{{ $rev['change_reason'] }}"
+                                    </div>
+                                @endif
+                                <div style="font-size: 11px; color: #334155; line-height: 1.4; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #f1f5f9;">
+                                    {{ $rev['response_text'] ?: '— (Tidak ada teks narasi) —' }}
+                                </div>
+                            </div>
+                        @empty
+                            <div style="padding: 24px; text-align: center; color: #94a3b8;">
+                                Belum ada riwayat revisi yang tercatat untuk butir ini.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 14px;">
+                        <button
+                            type="button"
+                            wire:click="closeRevisionHistoryModal"
+                            class="iqms-btn iqms-btn-secondary"
+                        >
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- ── 7. Modal: Tautkan Dokumen Bukti (Citation) ───────────── --}}
+        @if ($showEvidenceModal && $activeResponseForEvidence)
+            <div class="iqms-modal-backdrop" wire:click.self="closeEvidenceLinkModal">
+                <div class="iqms-modal-content" style="max-width: 650px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 15px; font-weight: 700; margin: 0;">📎 Tautkan Bukti & Sitasi: {{ $evidenceModalResponseKey }}</h3>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Kelola tautan dokumen bukti dari Evidence Center dan catatan sitasi halaman</div>
+                        </div>
+                        <button type="button" wire:click="closeEvidenceLinkModal" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
+                    </div>
+
+                    {{-- Attached Evidences List --}}
+                    <div style="margin-bottom: 18px;">
+                        <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px;">
+                            Dokumen Bukti Tertaut ({{ $activeResponseForEvidence->evidenceLinks->count() }})
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+                            @forelse ($activeResponseForEvidence->evidenceLinks as $link)
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 12px; color: #0f172a;">
+                                            {{ $link->evidence?->title ?? 'Dokumen Bukti' }}
                                         </div>
-                                    </td>
-
-                                    {{-- Bagian / Kriteria --}}
-                                    <td style="font-weight: 600; color: #0f172a;">
-                                        {{ $response->section?->title ?: '—' }}
-                                    </td>
-
-                                    {{-- Narasi Preview --}}
-                                    <td style="max-width: 320px; line-height: 1.4;">
-                                        @if (filled($response->response_text))
-                                            <div style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                                {{ $response->response_text }}
+                                        <div style="font-size: 10px; color: #64748b; margin-top: 2px; display: flex; gap: 8px;">
+                                            <span>Kode: <code>{{ $link->evidence?->code ?? '-' }}</code></span>
+                                            <span>•</span>
+                                            <span>Hal/Bagian: <strong>{{ $link->citation_page ?: '1' }}</strong></span>
+                                            <span>•</span>
+                                            <span style="color: {{ $link->evidence?->status === 'verified' ? '#16a34a' : '#d97706' }}; font-weight: 600;">
+                                                {{ $link->evidence?->status === 'verified' ? 'Terverifikasi' : 'Draft' }}
+                                            </span>
+                                        </div>
+                                        @if (filled($link->citation_note))
+                                            <div style="font-size: 10px; color: #475569; font-style: italic; margin-top: 2px;">
+                                                "{{ $link->citation_note }}"
                                             </div>
-                                        @else
-                                            <span style="font-style: italic; color: #94a3b8;">Belum ada narasi respons LED.</span>
                                         @endif
-                                    </td>
-
-                                    {{-- Evidence --}}
-                                    <td>
-                                        @if ($evCount > 0)
-                                            <span class="iqms-badge iqms-badge-blue">
-                                                📎 {{ $evCount }} Dok ({{ $verCount }} Verif)
-                                            </span>
-                                        @else
-                                            <span class="iqms-badge iqms-badge-gray" style="color: #94a3b8;">
-                                                0 Bukti
-                                            </span>
-                                        @endif
-                                    </td>
-
-                                    {{-- Status --}}
-                                    <td>
-                                        <span class="iqms-badge {{ match($response->status) {
-                                            'approved', 'locked' => 'iqms-badge-green',
-                                            'in_review', 'review' => 'iqms-badge-blue',
-                                            'revision_required', 'rejected' => 'iqms-badge-red',
-                                            default => 'iqms-badge-gray'
-                                        } }}">
-                                            {{ \App\Support\Ui\StatusLabel::for($response->status) }}
-                                        </span>
-                                    </td>
-
-                                    {{-- Action link --}}
-                                    <td style="text-align: right;">
-                                        <a
-                                            href="{{ \App\Filament\Resources\Accreditations\AccreditationResource::getUrl('edit', ['record' => $selectedAccreditation]) }}"
-                                            style="color: #0284c7; font-weight: 600; text-decoration: none;"
-                                        >
-                                            Sunting →
-                                        </a>
-                                    </td>
-                                </tr>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        wire:click="detachEvidenceLink({{ $link->getKey() }})"
+                                        style="background: none; border: none; cursor: pointer; color: #ef4444; font-size: 14px; padding: 4px;"
+                                        title="Lepas tautan bukti ini"
+                                    >
+                                        🗑️
+                                    </button>
+                                </div>
                             @empty
-                                <tr>
-                                    <td colspan="6" style="padding: 24px; text-align: center; color: #94a3b8;">
-                                        Tidak ada butir LKE/LED yang sesuai dengan filter.
-                                    </td>
-                                </tr>
+                                <div style="padding: 16px; text-align: center; color: #94a3b8; border: 1px dashed #cbd5e1; border-radius: 8px; font-size: 11px;">
+                                    Belum ada dokumen bukti yang ditautkan ke butir ini.
+                                </div>
                             @endforelse
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
+
+                    {{-- Form Tautkan Bukti Baru --}}
+                    <div style="border-top: 1px solid #e2e8f0; padding-top: 14px;">
+                        <div style="font-size: 12px; font-weight: 700; margin-bottom: 10px;">➕ Tautkan Dokumen Bukti Baru</div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div>
+                                <label style="font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px;">Pilih Dokumen dari Evidence Center <span style="color: #ef4444;">*</span></label>
+                                <select
+                                    wire:model="selectedEvidenceId"
+                                    class="iqms-grid-input"
+                                >
+                                    <option value="">-- Pilih Dokumen Bukti --</option>
+                                    @foreach ($availableEvidences as $ev)
+                                        <option value="{{ $ev->getKey() }}">
+                                            [{{ $ev->code }}] {{ $ev->title }} ({{ $ev->status === 'verified' ? 'Terverifikasi' : 'Draft' }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                                <div>
+                                    <label style="font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px;">Nomor Halaman / Bagian</label>
+                                    <input
+                                        type="number"
+                                        wire:model="citationPage"
+                                        placeholder="Contoh: 12"
+                                        class="iqms-grid-input"
+                                    />
+                                </div>
+                                <div>
+                                    <label style="font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px;">Catatan Sitasi / Relevansi</label>
+                                    <input
+                                        type="text"
+                                        wire:model="citationNote"
+                                        placeholder="Contoh: Lihat tabel 3.1 realisasi capaian standar"
+                                        class="iqms-grid-input"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                            <button
+                                type="button"
+                                wire:click="closeEvidenceLinkModal"
+                                class="iqms-btn iqms-btn-secondary"
+                            >
+                                Tutup
+                            </button>
+                            <button
+                                type="button"
+                                wire:click="attachEvidenceLink"
+                                class="iqms-btn iqms-btn-primary"
+                                @if (! $selectedEvidenceId) disabled style="opacity: 0.5; cursor: not-allowed;" @endif
+                            >
+                                📎 Tambahkan Tautan Bukti
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- ── 8. Modal: Spreadsheet Import LKPS ────────────────────── --}}
+        @if ($showImportModal && $selectedLkpsTemplate)
+            <div class="iqms-modal-backdrop" wire:click.self="closeImportModal">
+                <div class="iqms-modal-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 16px; font-weight: 700; margin: 0;">📥 Import Spreadsheet ke {{ $selectedLkpsTemplate->name }}</h3>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Mendukung format file CSV dan Excel (.xlsx / .xls)</div>
+                        </div>
+                        <button type="button" wire:click="closeImportModal" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
+                    </div>
+
+                    {{-- Upload Area --}}
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px;">Pilih File Spreadsheet</label>
+                        <input
+                            type="file"
+                            wire:model="importFile"
+                            accept=".csv, .xlsx, .xls, .txt"
+                            style="width: 100%; font-size: 12px; padding: 10px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc;"
+                        />
+                        <div wire:loading wire:target="importFile" style="font-size: 11px; color: #0284c7; margin-top: 6px;">
+                            ⏳ Memproses dan memvalidasi file spreadsheet...
+                        </div>
+                    </div>
+
+                    {{-- Import Reconciliation & Preview --}}
+                    @if ($importPreview)
+                        <div style="margin-bottom: 16px;">
+                            <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                                <span>Hasil Pencocokan Kolom ({{ count($importPreview['preview_rows']) }} dari {{ $importPreview['raw_rows_count'] }} baris terbaca)</span>
+                                <span class="iqms-badge {{ $importPreview['validation']['has_errors'] ? 'iqms-badge-amber' : 'iqms-badge-green' }}">
+                                    {{ $importPreview['validation']['valid_rows'] }} / {{ count($importPreview['validation']['rows']) }} baris valid
+                                </span>
+                            </div>
+
+                            {{-- Preview Table --}}
+                            <div class="iqms-table-wrap" style="max-height: 220px; margin-top: 0;">
+                                <table class="iqms-table" style="font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px;">#</th>
+                                            @foreach ($selectedLkpsTemplate->columns->sortBy('sort_order') as $col)
+                                                <th>{{ $col->label }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($importPreview['preview_rows'] as $pIdx => $pRow)
+                                            <tr>
+                                                <td style="color: #64748b;">{{ $pIdx + 1 }}</td>
+                                                @foreach ($selectedLkpsTemplate->columns->sortBy('sort_order') as $col)
+                                                    <td>{{ $pRow[$col->column_key] ?? '—' }}</td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Modal Footer --}}
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+                        <button
+                            type="button"
+                            wire:click="closeImportModal"
+                            class="iqms-btn iqms-btn-secondary"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="button"
+                            wire:click="commitImport"
+                            class="iqms-btn iqms-btn-success"
+                            @if (! $importPreview || empty($importPreview['validation']['rows'])) disabled style="opacity: 0.5; cursor: not-allowed;" @endif
+                        >
+                            ✓ Terapkan ke Tabel LKPS
+                        </button>
+                    </div>
                 </div>
             </div>
         @endif

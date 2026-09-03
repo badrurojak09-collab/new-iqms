@@ -81,4 +81,14 @@ class InstrumentVersion extends Model
     {
         return $this->hasMany(AssessmentRubric::class);
     }
+
+    public function lkpsTemplates(): HasMany
+    {
+        return $this->hasMany(LkpsTemplate::class);
+    }
+
+    public function ledTemplates(): HasMany
+    {
+        return $this->hasMany(LedTemplate::class);
+    }
 }

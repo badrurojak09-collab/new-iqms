@@ -31,4 +31,9 @@ class LkpsTemplate extends Model
     {
         return $this->hasMany(LkpsTemplateColumn::class);
     }
+
+    public function datasets(): HasMany
+    {
+        return $this->hasMany(LkpsDataset::class);
+    }
 }

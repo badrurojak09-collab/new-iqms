@@ -87,4 +87,9 @@ class Accreditation extends Model
     {
         return $this->hasMany(ReadinessRun::class);
     }
+
+    public function lkpsDatasets(): HasMany
+    {
+        return $this->hasMany(LkpsDataset::class);
+    }
 }

@@ -39,6 +39,11 @@ final class QualityDashboardMetrics
         $completedReadinessItems = (clone $readinessItems)->whereIn('status', ['done', 'completed', 'verified'])->count();
         $mappingQuery = InstrumentMapping::query()->whereIn('instrument_version_id', (clone $accreditations)->pluck('instrument_version_id'));
 
+        $lkpsDatasets = \App\Models\LkpsDataset::query()->whereIn('accreditation_id', $accreditationIds);
+        $totalDatasets = (clone $lkpsDatasets)->count();
+        $completedDatasets = (clone $lkpsDatasets)->where('status', 'approved')->count();
+        $lkpsDatasetProgress = $totalDatasets > 0 ? round(($completedDatasets / $totalDatasets) * 100, 2) : null;
+
         return [
             'spmi_evaluations' => $totalEvaluations,
             'spmi_met_rate' => $totalEvaluations === 0 ? 0.0 : round(($metEvaluations / $totalEvaluations) * 100, 2),
@@ -48,7 +53,7 @@ final class QualityDashboardMetrics
             'accreditations' => $totalAccreditations,
             'accreditations_ready_rate' => $totalAccreditations === 0 ? 0.0 : round(($readyAccreditations / $totalAccreditations) * 100, 2),
             'led_progress' => $this->progress($ledSections->avg('readiness_percent')),
-            'lkps_progress' => $this->progress($lkpsSections->avg('readiness_percent')),
+            'lkps_progress' => $lkpsDatasetProgress !== null ? $lkpsDatasetProgress : $this->progress($lkpsSections->avg('readiness_percent')),
             'response_completion_rate' => $totalResponses === 0 ? 0.0 : round(($completedResponses / $totalResponses) * 100, 2),
             'readiness_item_rate' => $totalReadinessItems === 0 ? 0.0 : round(($completedReadinessItems / $totalReadinessItems) * 100, 2),
             'sections' => $totalSections,

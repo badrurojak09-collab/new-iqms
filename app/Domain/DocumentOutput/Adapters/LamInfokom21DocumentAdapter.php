@@ -90,91 +90,81 @@ final class LamInfokom21DocumentAdapter implements AccreditationDocumentAdapter
 
     public function buildLkpsData(Accreditation $accreditation): array
     {
-        $accreditation->loadMissing(['perguruanTinggi', 'programStudi', 'responses']);
+        $accreditation->loadMissing([
+            'perguruanTinggi',
+            'programStudi',
+            'responses',
+            'instrumentVersion.lkpsTemplates.columns',
+            'lkpsDatasets.template.columns',
+        ]);
 
         $prodiName = $accreditation->programStudi?->nama_prodi ?? 'Teknik Informatika / Sistem Informasi';
+        $templates = $accreditation->instrumentVersion?->lkpsTemplates?->sortBy('sort_order') ?? collect();
 
-        $tables = [
-            [
-                'code' => 'Tabel 1',
-                'title' => 'Kerjasama Tridharma Bidang Infokom',
-                'description' => 'Kerjasama pendidikan, penelitian, dan PkM bidang informatika/komputer dengan industri IT dan instansi.',
-                'headers' => ['No', 'Lembaga Mitra', 'Tingkat', 'Bentuk Kegiatan', 'Bukti Kerjasama (MOU/MOA)', 'Durasi/Masa Berlaku'],
-                'rows' => [
-                    ['1', 'Industri Software & IT Solusi', 'Nasional', 'Magang MBKM & Penyerapan Lulusan', 'PKS/TI/2025/01', '3 Tahun'],
-                    ['2', 'Asosiasi Profesi Informatika / Komputer', 'Nasional', 'Uji Kompetensi & Sertifikasi BNSP', 'PKS/TI/2025/02', '5 Tahun'],
+        $tables = [];
+
+        if ($templates->isNotEmpty()) {
+            foreach ($templates as $template) {
+                $dataset = $accreditation->lkpsDatasets->firstWhere('lkps_template_id', $template->getKey());
+                $columns = $template->columns->sortBy('sort_order');
+                $headers = $columns->map(fn ($c) => $c->label . ($c->unit ? " ({$c->unit})" : ''))->values()->all();
+
+                $rows = [];
+                if ($dataset && ! empty($dataset->rows_data)) {
+                    foreach ($dataset->rows_data as $rIdx => $row) {
+                        $cells = [];
+                        foreach ($columns as $col) {
+                            $val = $row[$col->column_key] ?? '';
+                            if (is_numeric($val) && $col->data_type === 'decimal' && $col->decimal_scale !== null) {
+                                $val = number_format((float) $val, (int) $col->decimal_scale);
+                            }
+                            $cells[] = (string) $val;
+                        }
+                        $rows[] = $cells;
+                    }
+                }
+
+                if (empty($rows)) {
+                    // Provide an empty row with default indicators
+                    $rows[] = $columns->map(fn ($c) => '—')->all();
+                }
+
+                $tables[] = [
+                    'code' => $template->code,
+                    'title' => $template->name,
+                    'description' => $template->description ?: "Tabel data kuantitatif {$template->name}",
+                    'headers' => $headers,
+                    'rows' => $rows,
+                ];
+            }
+        }
+
+        // Fallback default tables if no instrument templates defined
+        if (empty($tables)) {
+            $tables = [
+                [
+                    'code' => 'Tabel 1',
+                    'title' => 'Kerjasama Tridharma Bidang Infokom',
+                    'description' => 'Kerjasama pendidikan, penelitian, dan PkM bidang informatika/komputer dengan industri IT dan instansi.',
+                    'headers' => ['No', 'Lembaga Mitra', 'Tingkat', 'Bentuk Kegiatan', 'Bukti Kerjasama (MOU/MOA)', 'Durasi/Masa Berlaku'],
+                    'rows' => [
+                        ['1', 'Industri Software & IT Solusi', 'Nasional', 'Magang MBKM & Penyerapan Lulusan', 'PKS/TI/2025/01', '3 Tahun'],
+                        ['2', 'Asosiasi Profesi Informatika / Komputer', 'Nasional', 'Uji Kompetensi & Sertifikasi BNSP', 'PKS/TI/2025/02', '5 Tahun'],
+                    ],
                 ],
-            ],
-            [
-                'code' => 'Tabel 2.a',
-                'title' => 'Jumlah Mahasiswa Baru dan Mahasiswa Aktif',
-                'description' => 'Seleksi dan daya tampung mahasiswa program studi.',
-                'headers' => ['Tahun Akademik', 'Daya Tampung', 'Pendaftar', 'Lulus Seleksi', 'Mahasiswa Baru Reguler', 'Total Mahasiswa Aktif'],
-                'rows' => [
-                    [date('Y', strtotime('-2 year')), '150', '450', '160', '150', '580'],
-                    [date('Y', strtotime('-1 year')), '150', '520', '165', '155', '610'],
-                    [date('Y'), '160', '600', '175', '160', '640'],
+                [
+                    'code' => 'Tabel 2.a',
+                    'title' => 'Jumlah Mahasiswa Baru dan Mahasiswa Aktif',
+                    'description' => 'Seleksi dan daya tampung mahasiswa program studi.',
+                    'headers' => ['Tahun Akademik', 'Daya Tampung', 'Pendaftar', 'Lulus Seleksi', 'Mahasiswa Baru Reguler', 'Total Mahasiswa Aktif'],
+                    'rows' => [
+                        [date('Y', strtotime('-2 year')), '150', '450', '160', '150', '580'],
+                        [date('Y', strtotime('-1 year')), '150', '520', '165', '155', '610'],
+                        [date('Y'), '160', '600', '175', '160', '640'],
+                    ],
                 ],
-            ],
-            [
-                'code' => 'Tabel 3.a.1',
-                'title' => 'Dosen Tetap Program Studi (DTPS) Bidang Infokom',
-                'description' => 'Kualifikasi, jabatan fungsional, dan sertifikasi pendidik/profesi DTPS.',
-                'headers' => ['No', 'Nama Dosen', 'NIDN', 'Pendidikan S2/S3', 'Bidang Keahlian', 'Jabatan Fungsional', 'Sertifikasi Pendidik', 'Sertifikasi Profesi IT (BNSP/Internasional)'],
-                'rows' => [
-                    ['1', 'Dr. Dosen Informatika, S.Kom., M.Kom.', '0412345601', 'S3 Ilmu Komputer', 'Artificial Intelligence', 'Lektor Kepala', 'Ya', 'Certified Data Scientist'],
-                    ['2', 'Dosen Sistem Informasi, M.Kom.', '0412345602', 'S2 Sistem Informasi', 'Enterprise Architecture', 'Lektor', 'Ya', 'Certified Scrum Master'],
-                    ['3', 'Dosen Rekayasa Perangkat Lunak, M.T.', '0412345603', 'S2 Teknik Informatika', 'Software Engineering', 'Lektor', 'Ya', 'AWS Certified Solutions Architect'],
-                ],
-            ],
-            [
-                'code' => 'Tabel 3.b',
-                'title' => 'Kinerja dan Publikasi Ilmiah DTPS Bidang Infokom',
-                'description' => 'Publikasi jurnal internasional terindeks Scopus/WoS, SINTA, dan HKI.',
-                'headers' => ['No', 'Jenis Publikasi / Karya', 'TS-2', 'TS-1', 'TS', 'Jumlah'],
-                'rows' => [
-                    ['1', 'Jurnal Internasional Terindeks (Scopus/WoS)', '3', '5', '8', '16'],
-                    ['2', 'Jurnal Nasional Terakreditasi (SINTA 1-2)', '4', '6', '7', '17'],
-                    ['3', 'Jurnal Nasional Terakreditasi (SINTA 3-6)', '8', '10', '12', '30'],
-                    ['4', 'Hak Cipta / Paten / HKI Software', '5', '7', '9', '21'],
-                ],
-            ],
-            [
-                'code' => 'Tabel 4',
-                'title' => 'Sarana & Laboratorium Komputer',
-                'description' => 'Kecukupan laboratorium komputasi, rasio komputer per mahasiswa, dan lisensi software.',
-                'headers' => ['No', 'Nama Laboratorium', 'Jumlah Unit PC', 'Spesifikasi Utama', 'Software Berlisensi / Open Source', 'Kondisi'],
-                'rows' => [
-                    ['1', 'Lab Rekayasa Perangkat Lunak & Web', '40 Unit', 'Intel Core i7 / 16GB RAM / SSD', 'VS Code, Docker, MySQL, IntelliJ', 'Sangat Baik'],
-                    ['2', 'Lab Artificial Intelligence & Data Science', '35 Unit', 'Intel Core i7 / GPU RTX 4060 / 32GB RAM', 'Python, TensorFlow, PyTorch, Jupyter', 'Sangat Baik'],
-                    ['3', 'Lab Jaringan & Keamanan Siber', '30 Unit', 'Cisco Router/Switch + Server PC', 'Wireshark, Kali Linux, Packet Tracer', 'Baik'],
-                ],
-            ],
-            [
-                'code' => 'Tabel 5.a',
-                'title' => 'Kurikulum, Capaian Pembelajaran (CPL), dan MBKM',
-                'description' => 'Struktur mata kuliah berbasis standar ACM/IEEE Curricula dan konversi sks MBKM.',
-                'headers' => ['Semester', 'Kode MK', 'Nama Mata Kuliah', 'Bobot SKS', 'Kelompok MK', 'Kesesuaian CPL ACM/IEEE'],
-                'rows' => [
-                    ['1', 'INF101', 'Dasar Pemrograman Komputer', '4', 'Wajib Keilmuan', 'Programming Fundamentals'],
-                    ['2', 'INF102', 'Struktur Data dan Algoritma', '4', 'Wajib Keilmuan', 'Algorithms & Complexity'],
-                    ['3', 'INF201', 'Basis Data & SQL', '3', 'Wajib Keilmuan', 'Information Management'],
-                    ['4', 'INF202', 'Rekayasa Perangkat Lunak', '3', 'Wajib Keilmuan', 'Software Engineering'],
-                    ['5', 'INF301', 'Kecerdasan Buatan', '3', 'Wajib Keilmuan', 'Intelligent Systems'],
-                    ['6', 'INF302', 'Magang Industri IT (MBKM)', '20', 'Pilihan MBKM', 'Professional Practice'],
-                ],
-            ],
-            [
-                'code' => 'Tabel 8.d',
-                'title' => 'Waktu Tunggu dan Kesesuaian Bidang Kerja Lulusan Infokom',
-                'description' => 'Hasil tracer study waktu tunggu mendapatkan pekerjaan dan kesesuaian bidang IT.',
-                'headers' => ['Tahun Lulus', 'Jumlah Lulusan', 'Lulusan Terlacak', 'Waktu Tunggu < 3 Bulan', 'Waktu Tunggu 3-6 Bulan', 'Bekerja Bidang Infokom (%)'],
-                'rows' => [
-                    [date('Y', strtotime('-2 year')), '110', '98', '65', '28', '89.5%'],
-                    [date('Y', strtotime('-1 year')), '125', '112', '78', '30', '92.0%'],
-                ],
-            ],
-        ];
+            ];
+        }
 
         return [
             'type' => 'LAM-INFOKOM-2.1-LKPS',
