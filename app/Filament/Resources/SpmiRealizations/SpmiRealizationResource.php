@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiRealizations;
 
+use App\Filament\Clusters\OutcomeSpmiCluster;
 use App\Filament\Resources\SpmiRealizations\RelationManagers\EvaluationsRelationManager;
 use App\Filament\Resources\SpmiRealizations\Pages\CreateSpmiRealization;
 use App\Filament\Resources\SpmiRealizations\Pages\EditSpmiRealization;
@@ -23,9 +24,10 @@ use Illuminate\Database\Eloquent\Builder;
 class SpmiRealizationResource extends Resource
 {
     protected static ?string $model = SpmiRealization::class;
-    protected static string|BackedEnum|null $navigationIcon = null;
-    protected static string|UnitEnum|null $navigationGroup = 'SPMI';
-    protected static ?int $navigationSort = 50;
+    protected static ?string $cluster = OutcomeSpmiCluster::class;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::ArchiveBoxXMark;
+
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationLabel = 'Realisasi SPMI';
     protected static ?string $modelLabel = 'Realisasi SPMI';
     protected static ?string $pluralModelLabel = 'Realisasi SPMI';

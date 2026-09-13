@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiEvaluations;
 
+use App\Filament\Clusters\OutcomeSpmiCluster;
 use App\Filament\Resources\SpmiEvaluations\RelationManagers\ImprovementProgramsRelationManager;
 use App\Filament\Resources\SpmiEvaluations\Pages\CreateSpmiEvaluation;
 use App\Filament\Resources\SpmiEvaluations\Pages\EditSpmiEvaluation;
@@ -23,9 +24,10 @@ use Illuminate\Database\Eloquent\Builder;
 class SpmiEvaluationResource extends Resource
 {
     protected static ?string $model = SpmiEvaluation::class;
-    protected static string|BackedEnum|null $navigationIcon = null;
-    protected static string|UnitEnum|null $navigationGroup = 'SPMI';
-    protected static ?int $navigationSort = 60;
+    protected static ?string $cluster = OutcomeSpmiCluster::class;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::AdjustmentsHorizontal;
+
+    protected static ?int $navigationSort = 3;
     protected static ?string $navigationLabel = 'Evaluasi SPMI';
     protected static ?string $modelLabel = 'Evaluasi SPMI';
     protected static ?string $pluralModelLabel = 'Evaluasi SPMI';

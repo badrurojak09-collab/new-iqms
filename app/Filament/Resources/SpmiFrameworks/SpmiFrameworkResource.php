@@ -12,8 +12,7 @@ use App\Filament\Resources\SpmiFrameworks\Schemas\SpmiFrameworkForm;
 use App\Filament\Resources\SpmiFrameworks\Tables\SpmiFrameworksTable;
 use App\Models\SpmiFramework;
 use App\Support\Tenancy\TenantQuery;
-use BackedEnum;
-use UnitEnum;
+use App\Filament\Clusters\SpmiCluster;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -23,12 +22,13 @@ use Illuminate\Database\Eloquent\Builder;
 class SpmiFrameworkResource extends Resource
 {
     protected static ?string $model = SpmiFramework::class;
+    protected static ?string $cluster = SpmiCluster::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTableCells;
 
-    protected static string|UnitEnum|null $navigationGroup = 'SPMI';
+    // protected static string|\UnitEnum|null $navigationGroup = 'SPMI';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationLabel = 'Framework SPMI';
 
@@ -65,4 +65,3 @@ class SpmiFrameworkResource extends Resource
         ];
     }
 }
-

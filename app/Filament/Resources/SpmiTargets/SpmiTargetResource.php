@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiTargets;
 
+use App\Filament\Clusters\OutcomeSpmiCluster;
 use App\Filament\Resources\SpmiTargets\Pages\CreateSpmiTarget;
 use App\Filament\Resources\SpmiTargets\Pages\EditSpmiTarget;
 use App\Filament\Resources\SpmiTargets\Pages\ListSpmiTargets;
@@ -21,9 +24,10 @@ use UnitEnum;
 class SpmiTargetResource extends Resource
 {
     protected static ?string $model = SpmiTarget::class;
-    protected static string|BackedEnum|null $navigationIcon = null;
-    protected static string|UnitEnum|null $navigationGroup = 'SPMI';
-    protected static ?int $navigationSort = 40;
+    protected static ?string $cluster = OutcomeSpmiCluster::class;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::CalendarDateRange;
+
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Target SPMI';
     protected static ?string $modelLabel = 'Target SPMI';
     protected static ?string $pluralModelLabel = 'Target SPMI';
