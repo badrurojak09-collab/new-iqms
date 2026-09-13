@@ -16,18 +16,22 @@ class AssessmentElementsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['criterion.instrumentVersion', 'instrumentNode']))
+            ->modifyQueryUsing(fn($query) => $query->with(['criterion.instrumentVersion', 'instrumentNode']))
             ->columns([
                 TextColumn::make('criterion.instrumentVersion.version_label')->label('Versi Instrumen')->sortable()->searchable(),
                 TextColumn::make('criterion.name')->label('Kriteria Penilaian')->wrap()->searchable(),
                 TextColumn::make('instrumentNode.title')->label('Elemen Instrumen')->wrap()->searchable(),
                 TextColumn::make('code')->label('Kode Elemen')->searchable()->sortable()->copyable(),
                 TextColumn::make('title')->label('Judul Elemen')->searchable()->wrap(),
-                TextColumn::make('element_type')->label('Jenis Elemen')->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'qualitative' => 'Kualitatif', 'quantitative' => 'Kuantitatif', 'documentary' => 'Dokumenter', 'mixed' => 'Campuran', default => $state ?: '—',
+                TextColumn::make('element_type')->label('Jenis Elemen')->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'qualitative' => 'Kualitatif',
+                    'quantitative' => 'Kuantitatif',
+                    'documentary' => 'Dokumenter',
+                    'mixed' => 'Campuran',
+                    default => $state ?: '—',
                 })->badge(),
                 TextColumn::make('weight')->label('Bobot')->numeric()->sortable(),
-                TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn (bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
+                TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn(bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
                 TextColumn::make('sort_order')->label('Urutan')->numeric()->sortable(),
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -38,7 +42,7 @@ class AssessmentElementsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
+                    // DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

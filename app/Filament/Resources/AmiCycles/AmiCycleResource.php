@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiCycles;
-use App\Support\Tenancy\TenantQuery;
 
+use App\Filament\Clusters\AmiCluster;
+use App\Support\Tenancy\TenantQuery;
 use App\Filament\Resources\AmiCycles\Pages\CreateAmiCycle;
 use App\Filament\Resources\AmiCycles\Pages\EditAmiCycle;
 use App\Filament\Resources\AmiCycles\Pages\ListAmiCycles;
@@ -14,20 +15,20 @@ use App\Filament\Resources\AmiCycles\RelationManagers\FindingsRelationManager;
 use App\Filament\Resources\AmiCycles\Schemas\AmiCycleForm;
 use App\Filament\Resources\AmiCycles\Tables\AmiCyclesTable;
 use App\Models\AmiCycle;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
+
 
 class AmiCycleResource extends Resource
 {
     protected static ?string $model = AmiCycle::class;
-    protected static string|BackedEnum|null $navigationIcon = null;
-    protected static string|UnitEnum|null $navigationGroup = 'AMI & Tindak Lanjut Mutu';
-    protected static ?int $navigationSort = 10;
+    protected static ?string $cluster = AmiCluster::class;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::BarsArrowDown;
+
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Siklus AMI';
     protected static ?string $modelLabel = 'Siklus AMI';
     protected static ?string $pluralModelLabel = 'Siklus AMI';

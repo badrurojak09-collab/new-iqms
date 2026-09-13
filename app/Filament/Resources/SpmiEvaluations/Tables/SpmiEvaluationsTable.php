@@ -22,7 +22,7 @@ class SpmiEvaluationsTable
             ->columns([
                 TextColumn::make('realization.indicator.name')
                     ->label('Indikator Realisasi')
-                    ->description(fn ($record): string => sprintf(
+                    ->description(fn($record): string => sprintf(
                         'Tahun %s • Nilai: %s',
                         $record->realization?->period_year ?? '—',
                         $record->realization?->realization_numeric ?? ($record->realization?->realization_text ?: '—'),
@@ -33,14 +33,14 @@ class SpmiEvaluationsTable
                 TextColumn::make('programStudi.nama_prodi')->label('Program Studi')->placeholder('—')->searchable(),
                 TextColumn::make('result')
                     ->label('Hasil Evaluasi')
-                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                    ->formatStateUsing(fn(?string $state): string => match ($state) {
                         'met' => 'Tercapai',
                         'partially_met' => 'Tercapai Sebagian',
                         'not_met' => 'Belum Tercapai',
                         default => $state ?: '—',
                     })
                     ->badge()
-                    ->color(fn (?string $state): string => match ($state) {
+                    ->color(fn(?string $state): string => match ($state) {
                         'met' => 'success',
                         'partially_met' => 'warning',
                         'not_met' => 'danger',
@@ -52,13 +52,15 @@ class SpmiEvaluationsTable
             ])
             ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+                BulkActionGroup::make([
+                    // DeleteBulkAction::make()->label('Hapus yang dipilih')
+                ]),
             ]);
     }
 }

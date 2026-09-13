@@ -29,7 +29,7 @@ class AccreditationBodiesTable
                 TextColumn::make('kind')
                     ->label('Jenis Lembaga')
                     ->badge()
-                    ->formatStateUsing(fn (mixed $state): string => match ($state) {
+                    ->formatStateUsing(fn(mixed $state): string => match ($state) {
                         'national' => 'Nasional',
                         'lam' => 'LAM',
                         'external' => 'Eksternal',
@@ -37,12 +37,12 @@ class AccreditationBodiesTable
                     }),
                 TextColumn::make('website')
                     ->label('Situs Web')
-                    ->url(fn (?string $state): ?string => $state)
+                    ->url(fn(?string $state): ?string => $state)
                     ->toggleable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->formatStateUsing(fn (mixed $state): string => $state === 'active' ? 'Aktif' : 'Tidak Aktif'),
+                    ->formatStateUsing(fn(mixed $state): string => $state === 'active' ? 'Aktif' : 'Tidak Aktif'),
                 TextColumn::make('instrument_families_count')->label('Jumlah Keluarga Instrumen')->counts('instrumentFamilies')->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -66,9 +66,9 @@ class AccreditationBodiesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
+                    //         DeleteBulkAction::make(),
+                    //         ForceDeleteBulkAction::make(),
+                    //         RestoreBulkAction::make(),
                 ]),
             ]);
     }

@@ -2,26 +2,25 @@
 
 namespace App\Filament\Resources\AssessmentThresholds;
 
+use App\Filament\Clusters\InstrumenCriteriaCluster;
 use App\Filament\Resources\AssessmentThresholds\Pages\CreateAssessmentThreshold;
 use App\Filament\Resources\AssessmentThresholds\Pages\EditAssessmentThreshold;
 use App\Filament\Resources\AssessmentThresholds\Pages\ListAssessmentThresholds;
 use App\Filament\Resources\AssessmentThresholds\Schemas\AssessmentThresholdForm;
 use App\Filament\Resources\AssessmentThresholds\Tables\AssessmentThresholdsTable;
 use App\Models\AssessmentThreshold;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class AssessmentThresholdResource extends Resource
 {
     protected static ?string $model = AssessmentThreshold::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::ArrowTurnDownLeft;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCriteriaCluster::class;
 
     protected static ?int $navigationSort = 100;
 

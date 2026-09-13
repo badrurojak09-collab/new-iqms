@@ -29,13 +29,14 @@ class SpmiIndicatorsTable
             ])
             ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
-            ]);
+            // ->toolbarActions([
+            //     BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+            // ])
+        ;
     }
 }

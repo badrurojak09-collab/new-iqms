@@ -26,17 +26,23 @@ class SpmiStandardsTable
                 TextColumn::make('perguruanTinggiStandard.name')->label('Induk Standar PT')->placeholder('—')->searchable(),
                 TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->searchable(),
                 TextColumn::make('indicators_count')->counts('indicators')->label('Jumlah Indikator')->sortable(),
-                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) { 'draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan', default => (string) $state, })->sortable(),
+                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'draft' => 'Draf',
+                    'active' => 'Aktif',
+                    'archived' => 'Diarsipkan',
+                    default => (string) $state,
+                })->sortable(),
             ])
             ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
-            ]);
+            // ->toolbarActions([
+            //     BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+            // ])
+        ;
     }
 }

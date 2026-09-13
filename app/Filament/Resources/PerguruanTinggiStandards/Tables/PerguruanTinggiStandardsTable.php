@@ -23,13 +23,20 @@ final class PerguruanTinggiStandardsTable
             ->columns([
                 TextColumn::make('code')->label('Kode')->searchable()->sortable(),
                 TextColumn::make('name')->label('Nama Standar')->searchable()->sortable()->wrap(),
-                TextColumn::make('category')->label('Kategori')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'academic' => 'Akademik', 'non_academic' => 'Non-Akademik', 'service' => 'Pelayanan Minimal', 'procedure' => 'SOP/Prosedur', default => (string) $state,
+                TextColumn::make('category')->label('Kategori')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'academic' => 'Akademik',
+                    'non_academic' => 'Non-Akademik',
+                    'service' => 'Pelayanan Minimal',
+                    'procedure' => 'SOP/Prosedur',
+                    default => (string) $state,
                 }),
                 TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->searchable()->sortable(),
-                TextColumn::make('spmi_standards_count')->label('Standar SPMI')->sortable(),
-                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan', default => (string) $state,
+                TextColumn::make('spmi_standards_count')->counts('spmiStandards')->label('Standar SPMI')->sortable(),
+                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'draft' => 'Draf',
+                    'active' => 'Aktif',
+                    'archived' => 'Diarsipkan',
+                    default => (string) $state,
                 }),
                 TextColumn::make('effective_from')->label('Mulai Berlaku')->date('d M Y')->placeholder('—'),
                 TextColumn::make('effective_until')->label('Berakhir')->date('d M Y')->placeholder('—'),
@@ -48,7 +55,7 @@ final class PerguruanTinggiStandardsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang dipilih'),
+                    // DeleteBulkAction::make()->label('Hapus yang dipilih'),
                 ]),
             ]);
     }

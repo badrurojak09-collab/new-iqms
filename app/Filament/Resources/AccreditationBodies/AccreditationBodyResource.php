@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AccreditationBodies;
 
+use App\Filament\Clusters\InstrumenCluster;
 use App\Filament\Resources\AccreditationBodies\Pages\CreateAccreditationBody;
 use App\Filament\Resources\AccreditationBodies\Pages\EditAccreditationBody;
 use App\Filament\Resources\AccreditationBodies\Pages\ListAccreditationBodies;
@@ -20,9 +21,9 @@ class AccreditationBodyResource extends Resource
 {
     protected static ?string $model = AccreditationBody::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::EllipsisHorizontal;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?string $navigationLabel = 'Lembaga Akreditasi';
 
@@ -30,7 +31,7 @@ class AccreditationBodyResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Lembaga Akreditasi';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {

@@ -25,7 +25,7 @@ class AssessmentCriteriaTable
                 TextColumn::make('weight')->label('Bobot')->suffix('%')->sortable(),
                 TextColumn::make('minimum_score')->label('Skor Minimum')->placeholder('—')->sortable(),
                 TextColumn::make('sort_order')->label('Urutan')->sortable(),
-                TextColumn::make('is_required')->label('Wajib')->badge()->formatStateUsing(fn (bool $state): string => $state ? 'Ya' : 'Tidak'),
+                TextColumn::make('is_required')->label('Wajib')->badge()->formatStateUsing(fn(bool $state): string => $state ? 'Ya' : 'Tidak'),
             ])
             ->filters([
                 SelectFilter::make('is_required')->label('Kriteria Wajib')->options([1 => 'Wajib', 0 => 'Tidak Wajib']),
@@ -36,7 +36,7 @@ class AssessmentCriteriaTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
+                    // DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

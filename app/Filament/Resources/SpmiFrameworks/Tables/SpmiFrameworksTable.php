@@ -28,7 +28,7 @@ class SpmiFrameworksTable
                 TextColumn::make('version_label')->label('Versi')->placeholder('—')->sortable(),
                 TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->searchable()->sortable(),
                 TextColumn::make('standards_count')->counts('standards')->label('Jumlah Standar')->sortable(),
-                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
+                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
                     'draft' => 'Draf',
                     'active' => 'Aktif',
                     'archived' => 'Diarsipkan',
@@ -42,18 +42,17 @@ class SpmiFrameworksTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang dipilih'),
-                    ForceDeleteBulkAction::make()->label('Hapus permanen'),
-                    RestoreBulkAction::make()->label('Pulihkan'),
+                    // DeleteBulkAction::make()->label('Hapus yang dipilih'),
+                    // ForceDeleteBulkAction::make()->label('Hapus permanen'),
+                    // RestoreBulkAction::make()->label('Pulihkan'),
                 ]),
             ]);
     }
 }
-

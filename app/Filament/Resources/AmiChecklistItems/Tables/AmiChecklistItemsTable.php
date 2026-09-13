@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Filament\Resources\AmiChecklistItems\Tables;
 
@@ -20,7 +22,7 @@ class AmiChecklistItemsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['cycle.perguruanTinggi', 'cycle.programStudi']))
+            ->modifyQueryUsing(fn($query) => $query->with(['cycle.perguruanTinggi', 'cycle.programStudi']))
             ->columns([
                 Stack::make([
                     Split::make([
@@ -75,10 +77,10 @@ class AmiChecklistItemsTable
                                 ->badge()
                                 ->color('info'),
                             TextColumn::make('evidence_required')
-                                 ->label('Evidence')
-                                 ->formatStateUsing(fn($state): string => $state ? 'Wajib Evidence' : 'Tidak Wajib Evidence')
-                                 ->badge()
-                                 ->color(fn($state): string => $state ? 'danger' : 'gray'),
+                                ->label('Evidence')
+                                ->formatStateUsing(fn($state): string => $state ? 'Wajib Evidence' : 'Tidak Wajib Evidence')
+                                ->badge()
+                                ->color(fn($state): string => $state ? 'danger' : 'gray'),
                             TextColumn::make('evidenceLinks.evidence.title')
                                 ->label('Bukti Audit')
                                 ->badge()
@@ -104,14 +106,14 @@ class AmiChecklistItemsTable
             ])
             ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
                 EditAction::make()->label('Edit'),
                 \Filament\Actions\Action::make('linkEvidence')
                     ->label('Tautkan Bukti')
                     ->icon('heroicon-o-paper-clip')
                     ->color('info')
-                    ->visible(fn ($record): bool => auth()->user()?->can('manage ami') || auth()->user()?->can('review ami'))
+                    ->visible(fn($record): bool => auth()->user()?->can('manage ami') || auth()->user()?->can('review ami'))
                     ->form([
                         \Filament\Forms\Components\Select::make('evidence_id')
                             ->label('Pilih Dokumen Bukti (Evidence Cloud)')
@@ -119,8 +121,8 @@ class AmiChecklistItemsTable
                                 $ptId = $record->cycle?->perguruan_tinggi_id;
 
                                 return \App\Models\Evidence::query()
-                                    ->when($ptId, fn ($q) => $q->where('perguruan_tinggi_id', $ptId))
-                                    ->whereHas('versions.document', fn ($query) => $query->whereNotNull('external_url'))
+                                    ->when($ptId, fn($q) => $q->where('perguruan_tinggi_id', $ptId))
+                                    ->whereHas('versions.document', fn($query) => $query->whereNotNull('external_url'))
                                     ->orderBy('title')
                                     ->pluck('title', 'id')
                                     ->all();
@@ -167,7 +169,9 @@ class AmiChecklistItemsTable
                 DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+                BulkActionGroup::make([
+                    // DeleteBulkAction::make()->label('Hapus yang dipilih')
+                ]),
             ]);
     }
 }

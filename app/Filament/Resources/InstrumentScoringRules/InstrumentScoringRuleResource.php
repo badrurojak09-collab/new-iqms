@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\InstrumentScoringRules;
 
+use App\Filament\Clusters\InstrumenCluster;
 use App\Models\InstrumentScoringRule;
 use BackedEnum;
 use Filament\Forms\Components\KeyValue;
@@ -20,9 +21,9 @@ class InstrumentScoringRuleResource extends Resource
 {
     protected static ?string $model = InstrumentScoringRule::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::Map;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?int $navigationSort = 110;
 
@@ -56,8 +57,13 @@ class InstrumentScoringRuleResource extends Resource
             TextColumn::make('instrumentVersion.family.name')->label('Keluarga Instrumen')->sortable()->searchable(),
             TextColumn::make('instrumentVersion.version_label')->label('Versi Instrumen')->sortable()->searchable(),
             TextColumn::make('code')->label('Kode Aturan')->searchable()->sortable(),
-            TextColumn::make('rule_type')->label('Jenis Aturan')->formatStateUsing(fn (?string $state): string => match ($state) {
-                'weighted_sum' => 'Jumlah Berbobot', 'threshold' => 'Ambang Batas', 'formula' => 'Formula', 'mapping' => 'Pemetaan', 'status_qualification' => 'Kualifikasi Status', default => $state ?: '—',
+            TextColumn::make('rule_type')->label('Jenis Aturan')->formatStateUsing(fn(?string $state): string => match ($state) {
+                'weighted_sum' => 'Jumlah Berbobot',
+                'threshold' => 'Ambang Batas',
+                'formula' => 'Formula',
+                'mapping' => 'Pemetaan',
+                'status_qualification' => 'Kualifikasi Status',
+                default => $state ?: '—',
             })->badge(),
             TextColumn::make('updated_at')->label('Diperbarui Pada')->dateTime()->sortable(),
         ])->defaultSort('updated_at', 'desc');

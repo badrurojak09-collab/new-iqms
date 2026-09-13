@@ -17,20 +17,30 @@ class AssessmentIndicatorsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['element']))
+            ->modifyQueryUsing(fn($query) => $query->with(['element']))
             ->columns([
                 TextColumn::make('element.title')->label('Elemen Penilaian')->wrap()->searchable(),
                 TextColumn::make('code')->label('Kode Indikator')->searchable()->sortable()->copyable(),
                 TextColumn::make('name')->label('Nama Indikator')->wrap()->searchable()->sortable(),
                 TextColumn::make('unit')->label('Satuan')->placeholder('—'),
-                TextColumn::make('direction')->label('Arah Evaluasi')->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'higher_is_better' => 'Lebih Tinggi Lebih Baik', 'lower_is_better' => 'Lebih Rendah Lebih Baik', 'target_match' => 'Sesuai Target', default => $state ?: '—',
+                TextColumn::make('direction')->label('Arah Evaluasi')->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'higher_is_better' => 'Lebih Tinggi Lebih Baik',
+                    'lower_is_better' => 'Lebih Rendah Lebih Baik',
+                    'target_match' => 'Sesuai Target',
+                    default => $state ?: '—',
                 })->badge(),
-                TextColumn::make('data_type')->label('Tipe Data')->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'integer' => 'Bilangan Bulat', 'decimal' => 'Desimal', 'percentage' => 'Persentase', 'currency' => 'Mata Uang', 'text' => 'Teks', 'boolean' => 'Ya/Tidak', 'date' => 'Tanggal', default => $state ?: '—',
+                TextColumn::make('data_type')->label('Tipe Data')->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'integer' => 'Bilangan Bulat',
+                    'decimal' => 'Desimal',
+                    'percentage' => 'Persentase',
+                    'currency' => 'Mata Uang',
+                    'text' => 'Teks',
+                    'boolean' => 'Ya/Tidak',
+                    'date' => 'Tanggal',
+                    default => $state ?: '—',
                 })->badge(),
                 TextColumn::make('sort_order')->label('Urutan')->sortable(),
-                TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn (bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
+                TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn(bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
             ])
             ->filters([
                 SelectFilter::make('direction')->label('Arah Evaluasi')->options(['higher_is_better' => 'Lebih Tinggi Lebih Baik', 'lower_is_better' => 'Lebih Rendah Lebih Baik', 'target_match' => 'Sesuai Target']),
@@ -42,7 +52,7 @@ class AssessmentIndicatorsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
+                    // DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

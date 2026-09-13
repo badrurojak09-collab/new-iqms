@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources\InstrumentVersions;
 
 use App\Domain\InstrumentRegistry\ImportCanonicalInstrument;
+use App\Filament\Clusters\InstrumenCluster;
 use App\Filament\Resources\InstrumentVersions\Pages\CreateInstrumentVersion;
 use App\Filament\Resources\InstrumentVersions\Pages\EditInstrumentVersion;
 use App\Filament\Resources\InstrumentVersions\Pages\ListInstrumentVersions;
 use App\Models\InstrumentFamily;
 use App\Models\InstrumentVersion;
-use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -24,15 +24,14 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
-use UnitEnum;
 
 class InstrumentVersionResource extends Resource
 {
     protected static ?string $model = InstrumentVersion::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::DocumentMagnifyingGlass;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?int $navigationSort = 30;
 
@@ -68,7 +67,7 @@ class InstrumentVersionResource extends Resource
         return $table->columns([
             TextColumn::make('family.name')->label('Keluarga Instrumen')->searchable()->sortable(),
             TextColumn::make('version_label')->label('Label Versi')->searchable()->sortable(),
-            TextColumn::make('status')->label('Status Versi')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
+            TextColumn::make('status')->label('Status Versi')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
                 'review' => 'Dalam Review',
                 'published' => 'Diterbitkan',
                 'retired' => 'Tidak Berlaku',

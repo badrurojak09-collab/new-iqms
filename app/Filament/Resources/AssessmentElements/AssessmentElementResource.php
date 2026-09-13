@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssessmentElements;
 
+use App\Filament\Clusters\InstrumenCriteriaCluster;
 use App\Filament\Resources\AssessmentElements\Pages\CreateAssessmentElement;
 use App\Filament\Resources\AssessmentElements\Pages\EditAssessmentElement;
 use App\Filament\Resources\AssessmentElements\Pages\ListAssessmentElements;
@@ -18,9 +19,9 @@ class AssessmentElementResource extends Resource
 {
     protected static ?string $model = AssessmentElement::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::Square2Stack;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCriteriaCluster::class;
 
     protected static ?int $navigationSort = 60;
 

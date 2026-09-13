@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiTargets\Tables;
 
@@ -35,8 +37,9 @@ class SpmiTargetsTable
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
-            ]);
+            // ->toolbarActions([
+            //     BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+            // ])
+        ;
     }
 }

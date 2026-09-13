@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\InstrumentNodes;
 
+use App\Filament\Clusters\InstrumenCluster;
 use App\Filament\Resources\InstrumentNodes\Pages\CreateInstrumentNode;
 use App\Filament\Resources\InstrumentNodes\Pages\EditInstrumentNode;
 use App\Filament\Resources\InstrumentNodes\Pages\ListInstrumentNodes;
@@ -25,9 +26,9 @@ class InstrumentNodeResource extends Resource
 {
     protected static ?string $model = InstrumentNode::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::RectangleGroup;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?int $navigationSort = 40;
 
@@ -68,11 +69,15 @@ class InstrumentNodeResource extends Resource
             TextColumn::make('version.version_label')->label('Versi Instrumen')->sortable()->searchable(),
             TextColumn::make('code')->label('Kode Elemen')->searchable()->sortable(),
             TextColumn::make('title')->label('Judul Elemen')->searchable()->wrap(),
-            TextColumn::make('node_type')->label('Jenis Elemen')->formatStateUsing(fn (?string $state): string => match ($state) {
-                'standard' => 'Standar', 'criterion' => 'Kriteria', 'element' => 'Elemen', 'indicator' => 'Indikator', default => $state ?: '—',
+            TextColumn::make('node_type')->label('Jenis Elemen')->formatStateUsing(fn(?string $state): string => match ($state) {
+                'standard' => 'Standar',
+                'criterion' => 'Kriteria',
+                'element' => 'Elemen',
+                'indicator' => 'Indikator',
+                default => $state ?: '—',
             })->badge(),
             TextColumn::make('weight')->label('Bobot')->numeric(),
-            TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn (bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
+            TextColumn::make('is_required')->label('Wajib')->formatStateUsing(fn(bool $state): string => $state ? 'Ya' : 'Tidak')->badge(),
             TextColumn::make('sort_order')->label('Urutan')->sortable(),
         ])->defaultSort('sort_order');
     }

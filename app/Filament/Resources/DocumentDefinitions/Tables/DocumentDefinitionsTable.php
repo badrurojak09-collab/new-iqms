@@ -23,7 +23,7 @@ class DocumentDefinitionsTable
             TextColumn::make('name')->label('Nama Dokumen')->searchable()->sortable(),
             TextColumn::make('domain')->label('Modul Sumber')->badge()->sortable(),
             TextColumn::make('scope_type')->label('Tingkat Scope')->placeholder('Semua scope')->sortable(),
-            TextColumn::make('supported_formats')->label('Format')->formatStateUsing(fn ($state): string => is_array($state) ? implode(', ', array_map('strtoupper', $state)) : (string) $state),
+            TextColumn::make('supported_formats')->label('Format')->formatStateUsing(fn($state): string => is_array($state) ? implode(', ', array_map('strtoupper', $state)) : (string) $state),
             IconColumn::make('is_active')->label('Aktif')->boolean(),
             TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
         ])->filters([])
@@ -47,6 +47,10 @@ class DocumentDefinitionsTable
                     })
                     ->successNotificationTitle('Laporan generik berhasil dibuat'),
             ])
-            ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus')])]);
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    // DeleteBulkAction::make()->label('Hapus')
+                ])
+            ]);
     }
 }

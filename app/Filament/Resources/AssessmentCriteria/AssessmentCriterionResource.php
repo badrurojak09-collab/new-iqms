@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssessmentCriteria;
 
+use App\Filament\Clusters\InstrumenCluster;
 use App\Filament\Resources\AssessmentCriteria\Pages\CreateAssessmentCriterion;
 use App\Filament\Resources\AssessmentCriteria\Pages\EditAssessmentCriterion;
 use App\Filament\Resources\AssessmentCriteria\Pages\ListAssessmentCriteria;
@@ -19,9 +20,9 @@ class AssessmentCriterionResource extends Resource
 {
     protected static ?string $model = AssessmentCriterion::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::InformationCircle;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?int $navigationSort = 50;
 

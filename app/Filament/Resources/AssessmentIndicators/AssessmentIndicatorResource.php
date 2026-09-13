@@ -2,26 +2,27 @@
 
 namespace App\Filament\Resources\AssessmentIndicators;
 
+use App\Filament\Clusters\InstrumenCriteriaCluster;
 use App\Filament\Resources\AssessmentIndicators\Pages\CreateAssessmentIndicator;
 use App\Filament\Resources\AssessmentIndicators\Pages\EditAssessmentIndicator;
 use App\Filament\Resources\AssessmentIndicators\Pages\ListAssessmentIndicators;
 use App\Filament\Resources\AssessmentIndicators\Schemas\AssessmentIndicatorForm;
 use App\Filament\Resources\AssessmentIndicators\Tables\AssessmentIndicatorsTable;
 use App\Models\AssessmentIndicator;
-use BackedEnum;
+
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
+
 
 class AssessmentIndicatorResource extends Resource
 {
     protected static ?string $model = AssessmentIndicator::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::Forward;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCriteriaCluster::class;
 
     protected static ?int $navigationSort = 70;
 

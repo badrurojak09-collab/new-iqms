@@ -22,7 +22,7 @@ class AssessmentScalesTable
                 TextColumn::make('code')->label('Kode Skala')->searchable()->sortable()->copyable(),
                 TextColumn::make('name')->label('Nama Skala')->searchable()->sortable(),
                 TextColumn::make('instrumentVersion.version_label')->label('Versi Instrumen')->searchable()->sortable(),
-                TextColumn::make('scale_type')->label('Jenis Skala')->formatStateUsing(fn (?string $state): string => match ($state) {
+                TextColumn::make('scale_type')->label('Jenis Skala')->formatStateUsing(fn(?string $state): string => match ($state) {
                     'numeric' => 'Numerik',
                     'ordinal' => 'Ordinal',
                     'binary' => 'Biner',
@@ -44,7 +44,7 @@ class AssessmentScalesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
+                    // DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

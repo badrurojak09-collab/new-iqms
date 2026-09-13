@@ -67,7 +67,7 @@ class EvidenceResource extends Resource
                         ->relationship(
                             'perguruanTinggi',
                             'nama_pt',
-                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())
+                            modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())
                         )
                         ->searchable()
                         ->preload()
@@ -77,7 +77,7 @@ class EvidenceResource extends Resource
                         ->relationship(
                             'programStudi',
                             'nama_prodi',
-                            modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user())
+                            modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user())
                         )
                         ->searchable()
                         ->preload()
@@ -99,11 +99,11 @@ class EvidenceResource extends Resource
             TextColumn::make('title')->label('Judul')->searchable()->sortable()->wrap(),
             TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->sortable(),
             TextColumn::make('programStudi.nama_prodi')->label('Program Studi')->sortable()->placeholder('Tingkat Perguruan Tinggi'),
-            TextColumn::make('status')->label('Status Evidence')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state))->sortable(),
+            TextColumn::make('status')->label('Status Evidence')->badge()->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state))->sortable(),
             TextColumn::make('versions_count')->counts('versions')->label('Versi')->sortable(),
             TextColumn::make('valid_until')->label('Berlaku Sampai')->date()->sortable(),
             TextColumn::make('versions.document.storage_provider')->label('Penyimpanan')->badge()->placeholder('—'),
-            TextColumn::make('versions.document.external_url')->label('Tautan Cloud')->url(fn (?string $state): ?string => $state)->limit(35)->openUrlInNewTab()->placeholder('—'),
+            TextColumn::make('versions.document.external_url')->label('Tautan Cloud')->url(fn(?string $state): ?string => $state)->limit(35)->openUrlInNewTab()->placeholder('—'),
         ])->recordActions([
             Action::make('addVersion')->label('Tambah Link Versi')->icon(Heroicon::OutlinedLink)->form([
                 TextInput::make('external_url')->label('Tautan Dokumen Cloud')->url()->rules(['url', 'regex:/^https:\/\//i'])->required()->maxLength(2000)->helperText('Simpan link Google Drive atau cloud storage institusi. File tidak diunggah ke aplikasi SQM.'),
@@ -164,11 +164,18 @@ class EvidenceResource extends Resource
 
     public static function getRelations(): array
     {
-        return [EvidenceReviewsRelationManager::class, EvidenceLinkChecksRelationManager::class];
+        return [
+            EvidenceReviewsRelationManager::class,
+            EvidenceLinkChecksRelationManager::class
+        ];
     }
 
     public static function getPages(): array
     {
-        return ['index' => ListEvidences::route('/'), 'create' => CreateEvidence::route('/create'), 'edit' => EditEvidence::route('/{record}/edit')];
+        return [
+            'index' => ListEvidences::route('/'),
+            'create' => CreateEvidence::route('/create'),
+            'edit' => EditEvidence::route('/{record}/edit')
+        ];
     }
 }

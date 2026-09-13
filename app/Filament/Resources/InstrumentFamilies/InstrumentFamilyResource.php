@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\InstrumentFamilies;
 
+use App\Filament\Clusters\InstrumenCluster;
 use App\Filament\Resources\InstrumentFamilies\Pages\CreateInstrumentFamily;
 use App\Filament\Resources\InstrumentFamilies\Pages\EditInstrumentFamily;
 use App\Filament\Resources\InstrumentFamilies\Pages\ListInstrumentFamilies;
@@ -24,9 +25,9 @@ class InstrumentFamilyResource extends Resource
 {
     protected static ?string $model = InstrumentFamily::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::FolderArrowDown;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCluster::class;
 
     protected static ?int $navigationSort = 20;
 
@@ -60,7 +61,7 @@ class InstrumentFamilyResource extends Resource
             TextColumn::make('code')->label('Kode')->searchable()->sortable()->copyable(),
             TextColumn::make('name')->label('Nama Keluarga')->searchable()->sortable()->wrap(),
             TextColumn::make('accreditationBody.name')->label('Lembaga Penilai')->sortable()->searchable(),
-            TextColumn::make('scope_type')->label('Lingkup')->formatStateUsing(fn (?string $state): string => match ($state) {
+            TextColumn::make('scope_type')->label('Lingkup')->formatStateUsing(fn(?string $state): string => match ($state) {
                 'institution' => 'Institusi',
                 'program_study' => 'Program Studi',
                 'spmi' => 'SPMI',
@@ -73,6 +74,10 @@ class InstrumentFamilyResource extends Resource
 
     public static function getPages(): array
     {
-        return ['index' => ListInstrumentFamilies::route('/'), 'create' => CreateInstrumentFamily::route('/create'), 'edit' => EditInstrumentFamily::route('/{record}/edit')];
+        return [
+            'index' => ListInstrumentFamilies::route('/'),
+            'create' => CreateInstrumentFamily::route('/create'),
+            'edit' => EditInstrumentFamily::route('/{record}/edit')
+        ];
     }
 }

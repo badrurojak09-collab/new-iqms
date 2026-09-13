@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssessmentScales;
 
+use App\Filament\Clusters\InstrumenCriteriaCluster;
 use App\Filament\Resources\AssessmentScales\Pages\CreateAssessmentScale;
 use App\Filament\Resources\AssessmentScales\Pages\EditAssessmentScale;
 use App\Filament\Resources\AssessmentScales\Pages\ListAssessmentScales;
@@ -9,20 +10,20 @@ use App\Filament\Resources\AssessmentScales\RelationManagers\OptionsRelationMana
 use App\Filament\Resources\AssessmentScales\Schemas\AssessmentScaleForm;
 use App\Filament\Resources\AssessmentScales\Tables\AssessmentScalesTable;
 use App\Models\AssessmentScale;
-use BackedEnum;
+
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
+
 
 class AssessmentScaleResource extends Resource
 {
     protected static ?string $model = AssessmentScale::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::Bars3CenterLeft;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCriteriaCluster::class;
 
     protected static ?int $navigationSort = 80;
 

@@ -25,7 +25,7 @@ class RtlActionsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['perguruanTinggi', 'programStudi', 'owner', 'readinessGap']))
+            ->modifyQueryUsing(fn($query) => $query->with(['perguruanTinggi', 'programStudi', 'owner', 'readinessGap']))
             ->columns([
                 TextColumn::make('code')->label('Kode RTL')->searchable()->sortable()->copyable(),
                 TextColumn::make('title')->label('Judul Tindak Lanjut')->searchable()->wrap(),
@@ -35,7 +35,7 @@ class RtlActionsTable
                 TextColumn::make('readinessGap.item_key')->label('Gap Kesiapan')->placeholder('—')->searchable(),
                 TextColumn::make('due_date')->label('Batas Waktu')->date()->sortable(),
                 TextColumn::make('progress_percent')->label('Progress')->suffix('%')->sortable(),
-                TextColumn::make('status')->label('Status RTL')->badge()->formatStateUsing(fn (mixed $state): string => StatusLabel::for($state))->sortable(),
+                TextColumn::make('status')->label('Status RTL')->badge()->formatStateUsing(fn(mixed $state): string => StatusLabel::for($state))->sortable(),
                 TextColumn::make('verified_at')->label('Diverifikasi Pada')->dateTime()->placeholder('—')->sortable(),
             ])
             ->filters([
@@ -43,25 +43,25 @@ class RtlActionsTable
             ])
             ->filters([TrashedFilter::make()->label('Data Terhapus')])
             ->recordActions([
-                RestoreAction::make()->label('Pulihkan')->visible(fn ($record): bool => $record->trashed()),
-                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn ($record): bool => $record->trashed()),
-                Action::make('start')->label('Mulai')->color('info')->visible(fn ($record): bool => auth()->user()?->can('manage rtl') && $record->status === 'open')->action(function ($record): void {
+                RestoreAction::make()->label('Pulihkan')->visible(fn($record): bool => $record->trashed()),
+                ForceDeleteAction::make()->label('Hapus Permanen')->visible(fn($record): bool => $record->trashed()),
+                Action::make('start')->label('Mulai')->color('info')->visible(fn($record): bool => auth()->user()?->can('manage rtl') && $record->status === 'open')->action(function ($record): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'in_progress');
                     Notification::make()->title('RTL dimulai.')->success()->send();
                 }),
-                Action::make('complete')->label('Selesaikan')->color('warning')->visible(fn ($record): bool => auth()->user()?->can('manage rtl') && $record->status === 'in_progress')->form([Textarea::make('reason')->label('Catatan Penyelesaian')])->action(function ($record, array $data): void {
+                Action::make('complete')->label('Selesaikan')->color('warning')->visible(fn($record): bool => auth()->user()?->can('manage rtl') && $record->status === 'in_progress')->form([Textarea::make('reason')->label('Catatan Penyelesaian')])->action(function ($record, array $data): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'completed', $data['reason'] ?? null);
                     Notification::make()->title('RTL ditandai selesai.')->success()->send();
                 }),
-                Action::make('verify')->label('Verifikasi')->color('success')->visible(fn ($record): bool => auth()->user()?->can('verify rtl') && $record->status === 'completed')->requiresConfirmation()->action(function ($record): void {
+                Action::make('verify')->label('Verifikasi')->color('success')->visible(fn($record): bool => auth()->user()?->can('verify rtl') && $record->status === 'completed')->requiresConfirmation()->action(function ($record): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'verified');
                     Notification::make()->title('RTL berhasil diverifikasi.')->success()->send();
                 }),
-                Action::make('close')->label('Tutup')->color('gray')->visible(fn ($record): bool => auth()->user()?->can('close rtl') && $record->status === 'verified')->requiresConfirmation()->action(function ($record): void {
+                Action::make('close')->label('Tutup')->color('gray')->visible(fn($record): bool => auth()->user()?->can('close rtl') && $record->status === 'verified')->requiresConfirmation()->action(function ($record): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'closed');
                     Notification::make()->title('RTL ditutup.')->success()->send();
                 }),
-                Action::make('cancel')->label('Batalkan')->color('danger')->visible(fn ($record): bool => auth()->user()?->can('manage rtl') && in_array($record->status, ['open', 'in_progress'], true))->form([Textarea::make('reason')->label('Alasan Pembatalan')->required()])->action(function ($record, array $data): void {
+                Action::make('cancel')->label('Batalkan')->color('danger')->visible(fn($record): bool => auth()->user()?->can('manage rtl') && in_array($record->status, ['open', 'in_progress'], true))->form([Textarea::make('reason')->label('Alasan Pembatalan')->required()])->action(function ($record, array $data): void {
                     app(RtlActionLifecycleService::class)->transition($record, auth()->user(), 'cancelled', $data['reason']);
                     Notification::make()->title('RTL dibatalkan.')->success()->send();
                 }),
@@ -69,7 +69,9 @@ class RtlActionsTable
                 DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()->label('Hapus yang dipilih')]),
+                BulkActionGroup::make([
+                    // DeleteBulkAction::make()->label('Hapus yang dipilih')
+                ]),
             ]);
     }
 }

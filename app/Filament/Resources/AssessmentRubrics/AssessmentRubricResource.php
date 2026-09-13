@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssessmentRubrics;
 
+use App\Filament\Clusters\InstrumenCriteriaCluster;
 use App\Filament\Resources\AssessmentRubrics\Pages\CreateAssessmentRubric;
 use App\Filament\Resources\AssessmentRubrics\Pages\EditAssessmentRubric;
 use App\Filament\Resources\AssessmentRubrics\Pages\ListAssessmentRubrics;
@@ -18,9 +19,9 @@ class AssessmentRubricResource extends Resource
 {
     protected static ?string $model = AssessmentRubric::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Instrument Registry';
+    protected static ?string $cluster = InstrumenCriteriaCluster::class;
 
     protected static ?int $navigationSort = 90;
 
