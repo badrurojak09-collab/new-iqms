@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\SpmiStandards\Schemas;
+
 use App\Support\Tenancy\TenantQuery;
 use Illuminate\Database\Eloquent\Builder;
-
+use Filament\Forms\Get;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -24,16 +25,40 @@ class SpmiStandardForm
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
-                        Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
-                        Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
-                        Select::make('perguruan_tinggi_standard_id')->label('Induk Standar Perguruan Tinggi')->relationship('perguruanTinggiStandard', 'name', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())->orderBy('sort_order'))->searchable()->preload()->placeholder('Tidak dihubungkan'),
-                        Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))->searchable()->preload(),
-                        TextInput::make('code')->label('Kode Standar')->required()->alphaDash()->maxLength(50)->unique(ignoreRecord: true),
-                        TextInput::make('name')->label('Nama Standar')->required()->maxLength(255),
-                        Select::make('status')->label('Status')->options(['draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan'])->default('draft')->required(),
-                        TextInput::make('sort_order')->label('Urutan')->numeric()->default(0),
-                        Textarea::make('statement')->label('Pernyataan Standar')->rows(4)->columnSpanFull(),
-                        Textarea::make('basis')->label('Dasar Standar')->rows(3)->columnSpanFull(),
+                    Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
+                    Select::make('perguruan_tinggi_id')
+                        ->label('Perguruan Tinggi')
+                        ->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->live(), // <--- Tambahkan live() agar mentriger perubahan ke select lain
+
+                    Select::make('perguruan_tinggi_standard_id')
+                        ->label('Induk Standar Perguruan Tinggi')
+                        ->relationship(
+                            'perguruanTinggiStandard',
+                            'name',
+                            modifyQueryUsing: function (Builder $query, $get): Builder {
+                                // Ambil ID perguruan tinggi yang sedang dipilih dari form
+                                $perguruanTinggiId = $get('perguruan_tinggi_id');
+
+                                return $query
+                                    ->when($perguruanTinggiId, fn($q) => $q->where('perguruan_tinggi_id', $perguruanTinggiId))
+                                    ->when(!$perguruanTinggiId, fn($q) => $q->whereRaw('1 = 0')) // Sembunyikan semua opsi jika PT belum dipilih
+                                    ->orderBy('sort_order');
+                            }
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->placeholder('Tidak dihubungkan'),
+                    Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))->searchable()->preload(),
+                    TextInput::make('code')->label('Kode Standar')->required()->alphaDash()->maxLength(50)->unique(ignoreRecord: true),
+                    TextInput::make('name')->label('Nama Standar')->required()->maxLength(255),
+                    Select::make('status')->label('Status')->options(['draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan'])->default('draft')->required(),
+                    TextInput::make('sort_order')->label('Urutan')->numeric()->default(0),
+                    Textarea::make('statement')->label('Pernyataan Standar')->rows(4)->columnSpanFull(),
+                    Textarea::make('basis')->label('Dasar Standar')->rows(3)->columnSpanFull(),
                 ]),
         ]);
     }
