@@ -27,13 +27,13 @@ class YayasansTable
             ])
             ->recordActions([
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
             ]);
+        // ->toolbarActions([
+        //     BulkActionGroup::make([
+        //         DeleteBulkAction::make(),
+        //         ForceDeleteBulkAction::make(),
+        //         RestoreBulkAction::make(),
+        //     ]),
+        // ]);
     }
 }

@@ -21,7 +21,7 @@ class PerguruanTinggisTable
                 TextColumn::make('kode_pt')->label('Kode PT')->searchable()->sortable(),
                 TextColumn::make('nama_pt')->label('Nama Perguruan Tinggi')->searchable()->sortable(),
                 TextColumn::make('yayasan.nama')->label('Yayasan')->searchable()->sortable(),
-                TextColumn::make('jenis')->label('Jenis')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
+                TextColumn::make('jenis')->label('Jenis')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
                     'universitas' => 'Universitas',
                     'institut' => 'Institut',
                     'sekolah_tinggi' => 'Sekolah Tinggi',
@@ -29,7 +29,7 @@ class PerguruanTinggisTable
                     'akademi' => 'Akademi',
                     default => (string) $state,
                 }),
-                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
+                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
                     'active' => 'Aktif',
                     'inactive' => 'Tidak Aktif',
                     default => (string) $state,
@@ -42,13 +42,13 @@ class PerguruanTinggisTable
             ->recordActions([
                 EditAction::make()->label('Edit'),
                 DeleteAction::make()->label('Hapus'),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
             ]);
+        // ->toolbarActions([
+        //     BulkActionGroup::make([
+        //         DeleteBulkAction::make(),
+        //         ForceDeleteBulkAction::make(),
+        //         RestoreBulkAction::make(),
+        //     ]),
+        // ]);
     }
 }

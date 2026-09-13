@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -100,8 +101,8 @@
 
         .ambient-bg {
             background: radial-gradient(circle at 10% 10%, rgba(224, 242, 254, 0.6) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 15%, rgba(243, 232, 255, 0.5) 0%, transparent 45%),
-                        radial-gradient(circle at 50% 90%, rgba(220, 252, 231, 0.5) 0%, transparent 50%);
+                radial-gradient(circle at 90% 15%, rgba(243, 232, 255, 0.5) 0%, transparent 45%),
+                radial-gradient(circle at 50% 90%, rgba(220, 252, 231, 0.5) 0%, transparent 50%);
         }
 
         .subtle-dot-grid {
@@ -113,18 +114,22 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f8fafc;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
     </style>
 </head>
+
 <body class="antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col justify-between bg-white text-slate-800 relative">
 
     <!-- Subtle Ambient Glow Background -->
@@ -140,15 +145,15 @@
                     <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-sky-500 p-[1.5px] shadow-md shadow-brand-700/10 group-hover:shadow-brand-700/25 transition-all duration-300">
                         <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
                             <svg class="w-6 h-6 text-brand-700 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                <path d="m9 12 2 2 4-4"/>
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                <path d="m9 12 2 2 4-4" />
                             </svg>
                         </div>
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="font-display font-black text-xl tracking-tight text-slate-900 group-hover:text-brand-700 transition-colors">I-QMS</span>
-                            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">PT Enterprise</span>
+                            <span class="font-display font-black text-xl tracking-tight text-slate-900 group-hover:text-brand-700 transition-colors">LPM</span>
+                            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">Al-Fath</span>
                         </div>
                         <p class="text-xs text-slate-500 hidden sm:block">SPMI &bull; AMI &bull; Akreditasi Terintegrasi</p>
                     </div>
@@ -169,10 +174,10 @@
 
                 <!-- Action CTA Buttons -->
                 <div class="flex items-center gap-3">
-                    <a href="{{ url('/admin') }}" 
-                       class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-slate-900 hover:bg-brand-700 shadow-sm hover:shadow-md transition-all duration-200">
+                    <a href="{{ url('/admin') }}"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-slate-900 hover:bg-brand-700 shadow-sm hover:shadow-md transition-all duration-200">
                         <svg class="w-4 h-4 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
                         <span>Masuk Portal</span>
                     </a>
@@ -209,7 +214,7 @@
         <!-- ================= HERO SECTION ================= -->
         <section class="relative pt-12 pb-16 md:pt-20 md:pb-28 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <!-- Tagline Badge -->
                 <div class="flex justify-center mb-6">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-sm">
@@ -224,8 +229,8 @@
                 <div class="text-center max-w-4xl mx-auto">
                     <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.18] mb-6">
                         Satu Ekosistem Mutu Terpadu: <br class="hidden sm:inline">
-                        <span class="text-sky-700">SPMI</span>, 
-                        <span class="text-purple-700">AMI</span>, & 
+                        <span class="text-sky-700">SPMI</span>,
+                        <span class="text-purple-700">AMI</span>, &
                         <span class="text-emerald-700">Akreditasi</span>
                     </h1>
                     <p class="text-lg sm:text-xl text-slate-600 leading-relaxed mb-10 max-w-3xl mx-auto font-normal">
@@ -234,18 +239,18 @@
 
                     <!-- Hero CTA Buttons -->
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                        <a href="{{ url('/admin') }}" 
-                           class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-white bg-brand-700 hover:bg-brand-800 shadow-lg shadow-brand-700/20 hover:-translate-y-0.5 transition-all duration-200 text-base">
+                        <a href="{{ url('/admin') }}"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-white bg-brand-700 hover:bg-brand-800 shadow-lg shadow-brand-700/20 hover:-translate-y-0.5 transition-all duration-200 text-base">
                             <span>Akses Portal SPMI & AMI</span>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </a>
-                        <a href="#triad" 
-                           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-300 shadow-sm transition-all duration-200 text-base">
+                        <a href="#triad"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-300 shadow-sm transition-all duration-200 text-base">
                             <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Eksplorasi Alur Sinergi</span>
                         </a>
@@ -255,7 +260,7 @@
                 <!-- Hero Interactive Ecosystem Visual Display (Clean Light Theme) -->
                 <div class="relative max-w-5xl mx-auto">
                     <div class="academic-card rounded-2xl p-6 sm:p-8 bg-white border-slate-200/90 shadow-xl overflow-hidden">
-                        
+
                         <!-- Top Bar Mockup -->
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
                             <div class="flex items-center gap-2">
@@ -274,7 +279,7 @@
 
                         <!-- 3-Pillar Interactive Live Sync Pipeline -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-                            
+
                             <!-- Card 1: SPMI -->
                             <div class="relative rounded-xl p-5 bg-sky-50/50 border border-sky-200 shadow-sm">
                                 <div class="flex items-center justify-between mb-3">
@@ -371,7 +376,7 @@
                         <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                                 <span>Single Source of Truth: Eviden SPMI & AMI otomatis mengalir ke Butir Penilaian Akreditasi</span>
                             </div>
@@ -408,7 +413,7 @@
         <!-- ================= THE TRIAD PHILOSOPHY SECTION ================= -->
         <section id="triad" class="py-16 md:py-24 relative border-t border-slate-200/80 bg-slate-50/60">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="text-xs font-bold uppercase tracking-wider text-brand-700 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 inline-block mb-3">
                         Filosofi Trinitas Mutu
@@ -423,12 +428,12 @@
 
                 <!-- 3 Pillars Cards with In-depth Meaning -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-14">
-                    
+
                     <!-- Pillar 1: SPMI -->
                     <div class="academic-card rounded-2xl p-8 bg-white border-slate-200 relative group">
                         <div class="w-14 h-14 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 mb-6">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                         </div>
 
@@ -440,15 +445,21 @@
 
                         <div class="space-y-3 border-t border-slate-100 pt-5 text-xs text-slate-700 font-medium">
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Standar Pendidikan, Penelitian, & Pengabdian</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Target & Realisasi Semesteran/Tahunan</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-sky-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Pusat Eviden Bukti Sahih (Link-Only Cloud)</span>
                             </div>
                         </div>
@@ -458,7 +469,7 @@
                     <div class="academic-card rounded-2xl p-8 bg-white border-slate-200 relative group">
                         <div class="w-14 h-14 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 mb-6">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
                         </div>
 
@@ -470,15 +481,21 @@
 
                         <div class="space-y-3 border-t border-slate-100 pt-5 text-xs text-slate-700 font-medium">
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Checklist & Penugasan Auditor Terverifikasi</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Temuan KTS & Rekomendasi Auditor</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-purple-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>RTM (Rapat Tinjauan) & RTL Efektivitas</span>
                             </div>
                         </div>
@@ -488,7 +505,7 @@
                     <div class="academic-card rounded-2xl p-8 bg-white border-slate-200 relative group">
                         <div class="w-14 h-14 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-6">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
 
@@ -500,15 +517,21 @@
 
                         <div class="space-y-3 border-t border-slate-100 pt-5 text-xs text-slate-700 font-medium">
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Pemetaan Dinamis Standar ke Butir LAM</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Penyusunan LED & LKPS Tanpa Duplikasi</span>
                             </div>
                             <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 <span>Simulasi Skor & Immutable Snapshot</span>
                             </div>
                         </div>
@@ -559,7 +582,7 @@
         <!-- ================= PPEPP STEP-BY-STEP WORKFLOW ================= -->
         <section id="ppepp" class="py-16 md:py-24 relative bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="text-xs font-bold uppercase tracking-wider text-brand-700 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 inline-block mb-3">
                         Siklus Standar Nasional Dikti
@@ -573,7 +596,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-6">
-                    
+
                     <!-- P1 -->
                     <div class="academic-card p-6 rounded-2xl border-slate-200 bg-white flex flex-col justify-between">
                         <div>
@@ -663,7 +686,7 @@
         <!-- ================= INTERACTIVE READINESS SIMULATOR ================= -->
         <section id="simulator" class="py-16 md:py-24 relative border-t border-slate-200/80 bg-slate-50/70">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center max-w-3xl mx-auto mb-12">
                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 inline-block mb-3">
                         Simulasi Interaktif
@@ -678,10 +701,10 @@
 
                 <div class="max-w-4xl mx-auto academic-card rounded-2xl p-6 sm:p-10 bg-white border-slate-200 shadow-lg">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        
+
                         <!-- Sliders Controls (7 Cols) -->
                         <div class="lg:col-span-7 space-y-6">
-                            
+
                             <!-- Control 1: SPMI Target Realization -->
                             <div>
                                 <div class="flex justify-between items-center mb-2">
@@ -691,8 +714,8 @@
                                     </label>
                                     <span id="spmiValText" class="text-sm font-mono font-bold text-sky-700">85%</span>
                                 </div>
-                                <input id="spmiSlider" type="range" min="30" max="100" value="85" 
-                                       class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600">
+                                <input id="spmiSlider" type="range" min="30" max="100" value="85"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600">
                                 <p class="text-[11px] text-slate-500 mt-1">Tingkat realisasi pemenuhan target IKU & IKT SPMI.</p>
                             </div>
 
@@ -705,8 +728,8 @@
                                     </label>
                                     <span id="amiValText" class="text-sm font-mono font-bold text-purple-700">90%</span>
                                 </div>
-                                <input id="amiSlider" type="range" min="20" max="100" value="90" 
-                                       class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                                <input id="amiSlider" type="range" min="20" max="100" value="90"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600">
                                 <p class="text-[11px] text-slate-500 mt-1">Efektivitas penutupan temuan KTS hasil audit internal.</p>
                             </div>
 
@@ -719,8 +742,8 @@
                                     </label>
                                     <span id="evidenValText" class="text-sm font-mono font-bold text-emerald-700">95%</span>
                                 </div>
-                                <input id="evidenSlider" type="range" min="30" max="100" value="95" 
-                                       class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                                <input id="evidenSlider" type="range" min="30" max="100" value="95"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
                                 <p class="text-[11px] text-slate-500 mt-1">Dokumen sah di Evidence Center yang masih berlaku & terverifikasi.</p>
                             </div>
 
@@ -731,7 +754,7 @@
                             <div class="text-xs uppercase font-bold text-slate-300 tracking-wider mb-2">
                                 Proyeksi Skor Akreditasi
                             </div>
-                            
+
                             <!-- Big Score -->
                             <div class="my-3">
                                 <span id="simScoreText" class="font-display text-5xl font-black text-amber-400 tracking-tight">3.72</span>
@@ -762,7 +785,7 @@
         <!-- ================= KEY FEATURES MATRIX ================= -->
         <section id="features" class="py-16 md:py-24 relative bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="text-xs font-bold uppercase tracking-wider text-brand-700 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 inline-block mb-3">
                         Arsitektur Modern
@@ -776,12 +799,12 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
+
                     <!-- Feature 1 -->
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Polymorphic Evidence Center</h3>
@@ -794,7 +817,7 @@
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Immutable Score Snapshot</h3>
@@ -807,7 +830,7 @@
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Multi-Instrument Versioning</h3>
@@ -820,7 +843,7 @@
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Multi-Tenant (PT, Fak, Prodi)</h3>
@@ -833,7 +856,7 @@
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Automasi LED & LKPS</h3>
@@ -846,7 +869,7 @@
                     <div class="academic-card p-6 sm:p-7 rounded-2xl bg-white border-slate-200">
                         <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 mb-5">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <h3 class="font-bold text-slate-900 text-lg mb-2">Real-Time Audit Trail</h3>
@@ -864,7 +887,7 @@
         <!-- ================= USER ROLES & CAPABILITIES ================= -->
         <section id="roles" class="py-16 md:py-24 relative border-t border-slate-200/80 bg-slate-50/60">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="text-xs font-bold uppercase tracking-wider text-purple-700 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 inline-block mb-3">
                         Kewenangan Terarah
@@ -878,7 +901,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    
+
                     <!-- Role 1: Pimpinan & LPM -->
                     <div class="academic-card rounded-2xl p-7 bg-white border-slate-200">
                         <div class="inline-block px-3 py-1 rounded-full bg-sky-50 text-sky-800 text-xs font-bold mb-4 border border-sky-200">
@@ -966,7 +989,7 @@
         <!-- ================= FAQ SECTION ================= -->
         <section id="faq" class="py-16 md:py-24 relative bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <div class="text-center mb-14">
                     <span class="text-xs font-bold uppercase tracking-wider text-brand-700 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 inline-block mb-3">
                         Pertanyaan Umum
@@ -980,7 +1003,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    
+
                     <!-- FAQ 1 -->
                     <div class="academic-card rounded-xl p-5 bg-white border-slate-200">
                         <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center justify-between">
@@ -1035,7 +1058,7 @@
         <section class="py-16 relative bg-slate-50/70 border-t border-slate-200/80">
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="relative rounded-3xl p-8 sm:p-12 overflow-hidden bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 border border-slate-800 shadow-2xl text-center text-white">
-                    
+
                     <div class="relative z-10 max-w-2xl mx-auto">
                         <span class="text-xs font-bold uppercase tracking-wider text-sky-300 px-3 py-1 rounded-full bg-sky-950 border border-sky-800 inline-block mb-4">
                             Mulai Transformasi Mutu Perguruan Tinggi
@@ -1048,11 +1071,11 @@
                         </p>
 
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <a href="{{ url('/admin') }}" 
-                               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-500 shadow-lg shadow-brand-600/30 transition-all text-base">
+                            <a href="{{ url('/admin') }}"
+                                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-500 shadow-lg shadow-brand-600/30 transition-all text-base">
                                 <span>Masuk ke Dashboard Sistem</span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </a>
                         </div>
@@ -1068,14 +1091,14 @@
     <footer class="relative z-10 border-t border-slate-200 bg-white pt-12 pb-8 text-slate-600 text-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                
+
                 <!-- Col 1 -->
                 <div class="md:col-span-2 space-y-3">
                     <div class="flex items-center gap-2">
                         <div class="w-8 h-8 rounded-lg bg-brand-700 flex items-center justify-center text-white font-bold text-sm">
-                            Q
+                            LPM
                         </div>
-                        <span class="font-display font-bold text-lg text-slate-900">I-QMS Enterprise</span>
+                        <span class="font-display font-bold text-lg text-slate-900">LPM Al-Fath </span>
                     </div>
                     <p class="text-slate-600 max-w-md leading-relaxed">
                         Integrated Quality Management System &bull; Platform Penjaminan Mutu & Akreditasi Terpadu Perguruan Tinggi yang menghubungkan SPMI, AMI, dan Akreditasi BAN-PT & Seluruh LAM.
@@ -1145,7 +1168,7 @@
         const spmiSlider = document.getElementById('spmiSlider');
         const amiSlider = document.getElementById('amiSlider');
         const evidenSlider = document.getElementById('evidenSlider');
-        
+
         const spmiValText = document.getElementById('spmiValText');
         const amiValText = document.getElementById('amiValText');
         const evidenValText = document.getElementById('evidenValText');
@@ -1196,4 +1219,5 @@
         }
     </script>
 </body>
+
 </html>
