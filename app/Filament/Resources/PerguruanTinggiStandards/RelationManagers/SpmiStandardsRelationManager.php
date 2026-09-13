@@ -27,6 +27,7 @@ final class SpmiStandardsRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema->components([
+            Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name', modifyQueryUsing: fn(Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
             TextInput::make('code')->label('Kode Standar SPMI')->required()->alphaDash()->maxLength(50),
             TextInput::make('name')->label('Nama Standar SPMI')->required()->maxLength(255),
             Select::make('status')->label('Status')->options(['draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan'])->default('draft')->required(),
@@ -39,7 +40,7 @@ final class SpmiStandardsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with(['framework', 'indicators']))
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query->with(['framework', 'indicators']))
             ->headerActions([
                 CreateAction::make()->label('Tambah Standar SPMI')->mutateFormDataUsing(function (array $data): array {
                     $data['perguruan_tinggi_id'] = $this->ownerRecord->perguruan_tinggi_id;
@@ -52,8 +53,11 @@ final class SpmiStandardsRelationManager extends RelationManager
                 TextColumn::make('name')->label('Nama Standar')->searchable()->sortable()->wrap(),
                 TextColumn::make('framework.name')->label('Framework SPMI')->placeholder('—'),
                 TextColumn::make('indicators_count')->counts('indicators')->label('Indikator')->sortable(),
-                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan', default => (string) $state,
+                TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn(?string $state): string => match ($state) {
+                    'draft' => 'Draf',
+                    'active' => 'Aktif',
+                    'archived' => 'Diarsipkan',
+                    default => (string) $state,
                 }),
             ])
             ->recordActions([EditAction::make()->label('Edit')]);
