@@ -32,10 +32,12 @@ final class RolePermissionSeeder extends Seeder
             'manage security',
             'view audit log',
 
-            // SPMI.
+            // SPMI dan Standar Perguruan Tinggi.
             'view spmi',
             'manage spmi',
             'verify spmi improvement',
+            'view perguruan tinggi standards',
+            'manage perguruan tinggi standards',
 
             // AMI.
             'view ami',
@@ -110,6 +112,7 @@ final class RolePermissionSeeder extends Seeder
                 'view organization', 'manage organization',
                 'view security', 'manage security', 'view audit log',
                 'view spmi', 'manage spmi', 'verify spmi improvement',
+                'view perguruan tinggi standards', 'manage perguruan tinggi standards',
                 'view ami', 'manage ami', 'review ami', 'verify ami',
                 'view accreditation', 'manage accreditation', 'review accreditation', 'approve accreditation',
                 'view rtm', 'manage rtm', 'view rtl', 'manage rtl', 'review rtl', 'verify rtl', 'close rtl',
@@ -142,6 +145,7 @@ final class RolePermissionSeeder extends Seeder
                 'view dashboard',
                 'view organization', 'manage organization',
                 'view spmi', 'manage spmi',
+                'view perguruan tinggi standards', 'manage perguruan tinggi standards',
                 'view ami', 'manage ami',
                 'view accreditation', 'manage accreditation',
                 'manage evidence',
@@ -155,6 +159,7 @@ final class RolePermissionSeeder extends Seeder
             'quality_manager' => [
                 'view dashboard',
                 'view spmi', 'manage spmi', 'verify spmi improvement',
+                'view perguruan tinggi standards', 'manage perguruan tinggi standards',
                 'view ami', 'review ami',
                 'view accreditation', 'review accreditation',
                 'view rtm', 'manage rtm',
@@ -171,6 +176,7 @@ final class RolePermissionSeeder extends Seeder
             'lpm' => [
                 'view dashboard',
                 'view spmi', 'manage spmi', 'verify spmi improvement',
+                'view perguruan tinggi standards', 'manage perguruan tinggi standards',
                 'view ami', 'review ami',
                 'view accreditation', 'review accreditation',
                 'view rtl', 'review rtl', 'verify rtl', 'review rtl effectiveness', 'submit rtl effectiveness',
@@ -193,6 +199,7 @@ final class RolePermissionSeeder extends Seeder
             'kaprodi' => [
                 'view dashboard',
                 'view spmi', 'manage spmi',
+                'view perguruan tinggi standards', 'manage perguruan tinggi standards',
                 'view ami', 'review ami',
                 'view accreditation', 'manage accreditation',
                 'manage rtl',

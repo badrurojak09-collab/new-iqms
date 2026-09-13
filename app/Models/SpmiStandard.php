@@ -15,7 +15,7 @@ class SpmiStandard extends Model
 
     protected $table = 'spmi_standards';
 
-    protected $fillable = ['spmi_framework_id', 'perguruan_tinggi_id', 'program_studi_id', 'code', 'name', 'statement', 'basis', 'status', 'sort_order'];
+    protected $fillable = ['spmi_framework_id', 'perguruan_tinggi_standard_id', 'perguruan_tinggi_id', 'program_studi_id', 'code', 'name', 'statement', 'basis', 'status', 'sort_order'];
 
     protected static function tenantScopeColumns(): array
     {
@@ -28,6 +28,11 @@ class SpmiStandard extends Model
     public function framework(): BelongsTo
     {
         return $this->belongsTo(SpmiFramework::class, 'spmi_framework_id');
+    }
+
+    public function perguruanTinggiStandard(): BelongsTo
+    {
+        return $this->belongsTo(PerguruanTinggiStandard::class, 'perguruan_tinggi_standard_id');
     }
 
     public function perguruanTinggi(): BelongsTo

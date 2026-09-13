@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             LamInfokom21CriteriaSeeder::class,
             BanPtIaptCriteriaSeeder::class,
             SpmiStmikRealisticDemoSeeder::class,
+            PerguruanTinggiStandardSeeder::class,
             AccreditationStmikRealisticDemoSeeder::class,
         ]);
 

@@ -90,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
             [\App\Models\ReadinessRun::class, \App\Policies\ReadinessRunPolicy::class],
             [\App\Models\SpmiEvaluation::class, \App\Policies\SpmiEvaluationPolicy::class],
             [\App\Models\SpmiFramework::class, \App\Policies\SpmiFrameworkPolicy::class],
+            [\App\Models\PerguruanTinggiStandard::class, \App\Policies\PerguruanTinggiStandardPolicy::class],
             [\App\Models\SpmiIndicator::class, \App\Policies\SpmiIndicatorPolicy::class],
             [\App\Models\SpmiRealization::class, \App\Policies\SpmiRealizationPolicy::class],
             [\App\Models\SpmiTarget::class, \App\Policies\SpmiTargetPolicy::class],

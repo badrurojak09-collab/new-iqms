@@ -26,6 +26,7 @@ class SpmiStandardForm
                 ->schema([
                         Select::make('spmi_framework_id')->label('Framework SPMI')->relationship('framework', 'name', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
                         Select::make('perguruan_tinggi_id')->label('Perguruan Tinggi')->relationship('perguruanTinggi', 'nama_pt', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user()))->searchable()->preload()->required(),
+                        Select::make('perguruan_tinggi_standard_id')->label('Induk Standar Perguruan Tinggi')->relationship('perguruanTinggiStandard', 'name', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forPerguruanTinggi($query, auth()->user())->orderBy('sort_order'))->searchable()->preload()->placeholder('Tidak dihubungkan'),
                         Select::make('program_studi_id')->label('Program Studi')->relationship('programStudi', 'nama_prodi', modifyQueryUsing: fn (Builder $query): Builder => TenantQuery::forProgramStudi($query, auth()->user()))->searchable()->preload(),
                         TextInput::make('code')->label('Kode Standar')->required()->alphaDash()->maxLength(50)->unique(ignoreRecord: true),
                         TextInput::make('name')->label('Nama Standar')->required()->maxLength(255),

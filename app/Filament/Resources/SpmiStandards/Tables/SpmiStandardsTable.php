@@ -23,6 +23,7 @@ class SpmiStandardsTable
                 TextColumn::make('code')->label('Kode')->searchable()->sortable(),
                 TextColumn::make('name')->label('Nama Standar')->searchable()->sortable(),
                 TextColumn::make('framework.name')->label('Framework')->searchable(),
+                TextColumn::make('perguruanTinggiStandard.name')->label('Induk Standar PT')->placeholder('—')->searchable(),
                 TextColumn::make('perguruanTinggi.nama_pt')->label('Perguruan Tinggi')->searchable(),
                 TextColumn::make('indicators_count')->counts('indicators')->label('Jumlah Indikator')->sortable(),
                 TextColumn::make('status')->label('Status')->badge()->formatStateUsing(fn (?string $state): string => match ($state) { 'draft' => 'Draf', 'active' => 'Aktif', 'archived' => 'Diarsipkan', default => (string) $state, })->sortable(),
