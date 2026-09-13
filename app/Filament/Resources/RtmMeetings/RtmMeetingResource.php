@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Filament\Resources\RtmMeetings;
+
 use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\RtmMeetings\Pages\CreateRtmMeeting;
@@ -24,7 +25,7 @@ use UnitEnum;
 class RtmMeetingResource extends Resource
 {
     protected static ?string $model = RtmMeeting::class;
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ReceiptPercent;
     protected static string|UnitEnum|null $navigationGroup = 'AMI & Tindak Lanjut Mutu';
     protected static ?int $navigationSort = 40;
     protected static ?string $navigationLabel = 'Rapat Tinjauan Manajemen';

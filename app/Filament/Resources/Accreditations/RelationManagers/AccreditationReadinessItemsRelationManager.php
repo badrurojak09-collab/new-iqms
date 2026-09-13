@@ -11,6 +11,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\CreateAction;
 
 class AccreditationReadinessItemsRelationManager extends RelationManager
 {
@@ -28,17 +30,24 @@ class AccreditationReadinessItemsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('item_type')->label('Jenis Item')->badge()->formatStateUsing(fn (mixed $state): string => match ($state) {
-                'led' => 'LED',
-                'lkps' => 'LKPS',
-                'evidence' => 'Evidence',
-                'mapping' => 'Pemetaan',
-                default => (string) $state,
-            }),
-            TextColumn::make('item_key')->label('Kunci Item')->searchable()->sortable(),
-            TextColumn::make('status')->label('Status Kesiapan')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
-            TextColumn::make('checked_at')->label('Diperiksa Pada')->dateTime()->sortable(),
-        ])->defaultSort('updated_at', 'desc');
+        return $table
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query->with([
+                // 'framework', 'indicators'
+            ]))
+            ->headerActions([
+                CreateAction::make()->label('Tambah'),
+            ])
+            ->columns([
+                TextColumn::make('item_type')->label('Jenis Item')->badge()->formatStateUsing(fn(mixed $state): string => match ($state) {
+                    'led' => 'LED',
+                    'lkps' => 'LKPS',
+                    'evidence' => 'Evidence',
+                    'mapping' => 'Pemetaan',
+                    default => (string) $state,
+                }),
+                TextColumn::make('item_key')->label('Kunci Item')->searchable()->sortable(),
+                TextColumn::make('status')->label('Status Kesiapan')->badge()->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
+                TextColumn::make('checked_at')->label('Diperiksa Pada')->dateTime()->sortable(),
+            ])->defaultSort('updated_at', 'desc');
     }
 }

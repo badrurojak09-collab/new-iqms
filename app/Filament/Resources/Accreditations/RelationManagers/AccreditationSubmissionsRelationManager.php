@@ -12,6 +12,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\CreateAction;
 
 class AccreditationSubmissionsRelationManager extends RelationManager
 {
@@ -36,13 +38,14 @@ class AccreditationSubmissionsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('submission_no')->label('Nomor Pengajuan')->sortable(),
-            TextColumn::make('status')->label('Status Pengajuan')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
-            TextColumn::make('package_hash')->label('Hash Paket')->limit(20)->copyable()->placeholder('Belum Dibuat'),
-            TextColumn::make('submitted_at')->label('Diajukan Pada')->dateTime()->placeholder('—')->sortable(),
-            TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
-        ])->defaultSort('submission_no', 'desc')
+        return $table
+            ->columns([
+                TextColumn::make('submission_no')->label('Nomor Pengajuan')->sortable(),
+                TextColumn::make('status')->label('Status Pengajuan')->badge()->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
+                TextColumn::make('package_hash')->label('Hash Paket')->limit(20)->copyable()->placeholder('Belum Dibuat'),
+                TextColumn::make('submitted_at')->label('Diajukan Pada')->dateTime()->placeholder('—')->sortable(),
+                TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
+            ])->defaultSort('submission_no', 'desc')
             ->recordActions([
                 ViewAction::make()->label('Lihat Paket')->form([
                     TextInput::make('submission_no')->label('Nomor Pengajuan')->disabled(),

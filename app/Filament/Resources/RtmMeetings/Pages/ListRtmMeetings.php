@@ -14,6 +14,6 @@ class ListRtmMeetings extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Buat Rapat RTM')];
+        return [CreateAction::make()->label('Tambah')];
     }
 }

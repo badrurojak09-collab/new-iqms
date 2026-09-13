@@ -14,6 +14,6 @@ class ListSpmiIndicators extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Buat SpmiIndicator')];
+        return [CreateAction::make()->label('Tambah')];
     }
 }

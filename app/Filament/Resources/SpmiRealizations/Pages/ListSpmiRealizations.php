@@ -14,6 +14,6 @@ class ListSpmiRealizations extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Buat SpmiRealization')];
+        return [CreateAction::make()->label('Tambah')];
     }
 }

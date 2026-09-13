@@ -15,8 +15,7 @@ class ListSpmiFrameworks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Buat Framework SPMI'),
+            CreateAction::make()->label('Buat Framework'),
         ];
     }
 }
-

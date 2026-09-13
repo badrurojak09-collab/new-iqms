@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\RtlActions;
+
 use App\Support\Tenancy\TenantQuery;
 
 use App\Filament\Resources\RtlActions\Pages\CreateRtlAction;
@@ -22,7 +23,7 @@ class RtlActionResource extends Resource
 {
     protected static ?string $model = RtlAction::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Bell;
 
     protected static string|\UnitEnum|null $navigationGroup = 'AMI & Tindak Lanjut Mutu';
 

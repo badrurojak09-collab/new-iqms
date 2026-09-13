@@ -13,7 +13,7 @@ class ListLkpsTemplates extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Buat Template LKPS'),
+            CreateAction::make()->label('Buat'),
         ];
     }
 }

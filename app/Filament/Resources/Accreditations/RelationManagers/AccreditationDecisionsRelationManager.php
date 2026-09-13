@@ -12,6 +12,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\CreateAction;
 
 class AccreditationDecisionsRelationManager extends RelationManager
 {
@@ -30,11 +32,18 @@ class AccreditationDecisionsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('decision_type')->label('Jenis Keputusan')->badge()->formatStateUsing(fn (mixed $state): string => $state === 'external' ? 'Eksternal' : 'Internal'),
-            TextColumn::make('result')->label('Hasil Keputusan')->searchable()->sortable(),
-            TextColumn::make('decision_date')->label('Tanggal Keputusan')->date()->sortable(),
-            TextColumn::make('valid_until')->label('Berlaku Sampai')->date()->sortable(),
-        ])->defaultSort('decision_date', 'desc');
+        return $table
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query->with([
+                // 'framework', 'indicators'
+            ]))
+            ->headerActions([
+                CreateAction::make()->label('Tambah'),
+            ])
+            ->columns([
+                TextColumn::make('decision_type')->label('Jenis Keputusan')->badge()->formatStateUsing(fn(mixed $state): string => $state === 'external' ? 'Eksternal' : 'Internal'),
+                TextColumn::make('result')->label('Hasil Keputusan')->searchable()->sortable(),
+                TextColumn::make('decision_date')->label('Tanggal Keputusan')->date()->sortable(),
+                TextColumn::make('valid_until')->label('Berlaku Sampai')->date()->sortable(),
+            ])->defaultSort('decision_date', 'desc');
     }
 }

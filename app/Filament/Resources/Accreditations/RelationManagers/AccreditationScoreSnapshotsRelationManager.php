@@ -12,6 +12,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\CreateAction;
 
 class AccreditationScoreSnapshotsRelationManager extends RelationManager
 {
@@ -29,8 +31,8 @@ class AccreditationScoreSnapshotsRelationManager extends RelationManager
                     TextInput::make('status')->label('Status Snapshot')->disabled(),
                     TextInput::make('snapshot_hash')->label('Hash Integritas Snapshot')->disabled(),
                     TextInput::make('calculated_at')->label('Dihitung Pada')->disabled(),
-                    Textarea::make('rule_results')->label('Hasil Aturan')->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
-                    Textarea::make('input_snapshot')->label('Snapshot Input')->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
+                    Textarea::make('rule_results')->label('Hasil Aturan')->formatStateUsing(fn($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
+                    Textarea::make('input_snapshot')->label('Snapshot Input')->formatStateUsing(fn($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
                 ]),
         ]);
     }
@@ -41,7 +43,7 @@ class AccreditationScoreSnapshotsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('calculated_at')->label('Dihitung Pada')->dateTime()->sortable(),
                 TextColumn::make('score')->numeric(decimalPlaces: 4)->sortable(),
-                TextColumn::make('status')->label('Status Snapshot')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
+                TextColumn::make('status')->label('Status Snapshot')->badge()->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
                 TextColumn::make('instrumentVersion.version_label')->label('Versi Instrumen')->sortable(),
                 TextColumn::make('calculatedBy.name')->label('Dihitung Oleh')->placeholder('Sistem'),
                 TextColumn::make('snapshot_hash')->label('Hash Integritas')->limit(18)->copyable()->copyMessage('Hash disalin'),
@@ -53,8 +55,8 @@ class AccreditationScoreSnapshotsRelationManager extends RelationManager
                     TextInput::make('status')->label('Status Snapshot')->disabled(),
                     TextInput::make('snapshot_hash')->label('Hash Integritas Snapshot')->disabled(),
                     TextInput::make('calculated_at')->label('Dihitung Pada')->disabled(),
-                    Textarea::make('rule_results')->label('Hasil Aturan')->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
-                    Textarea::make('input_snapshot')->label('Snapshot Input')->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
+                    Textarea::make('rule_results')->label('Hasil Aturan')->formatStateUsing(fn($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
+                    Textarea::make('input_snapshot')->label('Snapshot Input')->formatStateUsing(fn($state): string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : (string) $state)->disabled()->columnSpanFull(),
                 ]),
             ])
             ->headerActions([])

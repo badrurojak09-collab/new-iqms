@@ -10,6 +10,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\CreateAction;
 
 class AccreditationSectionsRelationManager extends RelationManager
 {
@@ -29,18 +31,25 @@ class AccreditationSectionsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('sort_order')->label('#')->sortable(),
-            TextColumn::make('code')->label('Kode Bagian')->searchable()->sortable(),
-            TextColumn::make('title')->label('Judul Bagian')->wrap()->searchable(),
-            TextColumn::make('section_type')->label('Jenis Bagian')->badge()->formatStateUsing(fn (mixed $state): string => match ($state) {
-                'led' => 'LED',
-                'lkps' => 'LKPS',
-                'other' => 'Lainnya',
-                default => (string) $state,
-            }),
-            TextColumn::make('status')->label('Status Bagian')->badge()->formatStateUsing(fn (mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
-            TextColumn::make('readiness_percent')->label('Kesiapan')->suffix('%')->sortable(),
-        ])->defaultSort('sort_order')->reorderable('sort_order');
+        return $table
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query->with([
+                // 'framework', 'indicators'
+            ]))
+            ->headerActions([
+                CreateAction::make()->label('Tambah'),
+            ])
+            ->columns([
+                TextColumn::make('sort_order')->label('#')->sortable(),
+                TextColumn::make('code')->label('Kode Bagian')->searchable()->sortable(),
+                TextColumn::make('title')->label('Judul Bagian')->wrap()->searchable(),
+                TextColumn::make('section_type')->label('Jenis Bagian')->badge()->formatStateUsing(fn(mixed $state): string => match ($state) {
+                    'led' => 'LED',
+                    'lkps' => 'LKPS',
+                    'other' => 'Lainnya',
+                    default => (string) $state,
+                }),
+                TextColumn::make('status')->label('Status Bagian')->badge()->formatStateUsing(fn(mixed $state): string => \App\Support\Ui\StatusLabel::for($state)),
+                TextColumn::make('readiness_percent')->label('Kesiapan')->suffix('%')->sortable(),
+            ])->defaultSort('sort_order')->reorderable('sort_order');
     }
 }

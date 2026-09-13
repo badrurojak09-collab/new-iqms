@@ -14,6 +14,6 @@ class ListSpmiEvaluations extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Buat SpmiEvaluation')];
+        return [CreateAction::make()->label('Tambah')];
     }
 }

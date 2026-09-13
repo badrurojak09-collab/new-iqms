@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ReadinessRuns\Pages;
 
 use App\Filament\Resources\ReadinessRuns\ReadinessRunResource;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\CreateAction;
 
 class ListReadinessRuns extends ListRecords
 {
@@ -11,6 +12,8 @@ class ListReadinessRuns extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [];
+        return [
+            CreateAction::make()->label('Tambah'),
+        ];
     }
 }

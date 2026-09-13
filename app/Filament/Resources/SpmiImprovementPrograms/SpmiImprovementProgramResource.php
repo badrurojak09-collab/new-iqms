@@ -22,7 +22,7 @@ class SpmiImprovementProgramResource extends Resource
 {
     protected static ?string $model = SpmiImprovementProgram::class;
 
-    protected static string|BackedEnum|null $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::InformationCircle;
 
     protected static string|UnitEnum|null $navigationGroup = 'SPMI';
 
